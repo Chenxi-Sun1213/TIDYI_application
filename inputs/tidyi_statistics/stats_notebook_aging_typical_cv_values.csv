@@ -1,0 +1,5 @@
+dataset,cv_source_dataset,rate,cv_rate,typical_cv,cv_summary_source
+Mukin,Mukin 2m SPF,prolif_rate,proliferation_rate,0.1855502811253239,/scratch/chenxi.sun/TIDYI_statistics/results/ref_cv/stats_notebook_ref_cv_separate_cv_summary.csv
+Mukin,Mukin 2m SPF,death_rate,death_rate,0.2026817166312967,/scratch/chenxi.sun/TIDYI_statistics/results/ref_cv/stats_notebook_ref_cv_separate_cv_summary.csv
+TMS,TMS 1m male,prolif_rate,proliferation_rate,0.0935607703055581,/scratch/chenxi.sun/TIDYI_statistics/results/ref_cv/stats_notebook_ref_cv_separate_cv_summary.csv
+TMS,TMS 1m male,death_rate,death_rate,0.1061160913103273,/scratch/chenxi.sun/TIDYI_statistics/results/ref_cv/stats_notebook_ref_cv_separate_cv_summary.csv

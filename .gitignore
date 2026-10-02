@@ -1,0 +1,27 @@
+# Python and notebook caches
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Local environments, editor files, and logs
+.venv/
+venv/
+.env
+.cache/
+.vscode/
+.idea/
+*.log
+*.tmp
+*.bak
+*~
+
+# Generated analysis outputs; reviewed baselines live in reference_outputs/
+**/outputs/*
+!**/outputs/.gitkeep
+
+# Large single-cell data remain in their documented authoritative locations
+*.h5ad
+*.h5
+*.loom
+*.mtx
+*.mtx.gz

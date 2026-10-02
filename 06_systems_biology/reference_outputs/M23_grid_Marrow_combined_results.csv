@@ -1,0 +1,15 @@
+celltype,model,n_conditions,a,b,ka,kb,kb_over_ka,SSE,RMSE_percent,SSE_reduction_percent,min_denominator,status,source_csv,n_nonpositive_gamma
+Precursor B cell,M4,8,0.0,0.0,0.19498445997579614,0.003981071705534835,0.020417379446695465,0.003177601991235035,1.992988331386763,0.0,0.057267171344261736,grid_interior,mukin_old_spf_vs_old_gf_tidyi.csv;mukin_young_spf_vs_old_spf_tidyi.csv;mukin_young_spf_vs_young_gf_tidyi.csv;tms_old_male_vs_old_female_tidyi.csv;tms_young_male_vs_young_female_tidyi.csv,
+Precursor B cell,M2,8,0.0,1.67,20.89296130853915,41.68693834703095,1.9952623149688746,0.002652527079963286,1.8208950683535028,16.52425044798228,20.755244019907614,grid_interior,mukin_old_spf_vs_old_gf_tidyi.csv;mukin_young_spf_vs_old_spf_tidyi.csv;mukin_young_spf_vs_young_gf_tidyi.csv;tms_old_male_vs_old_female_tidyi.csv;tms_young_male_vs_young_female_tidyi.csv,
+Precursor B cell,M3,8,-1.67,0.0,251188.64315092636,501187.2336272079,1.9952623149688749,0.0026530665542707156,1.8210802269088517,16.50727304461591,6884767.154582463,edge_unresolved,mukin_old_spf_vs_old_gf_tidyi.csv;mukin_young_spf_vs_old_spf_tidyi.csv;mukin_young_spf_vs_young_gf_tidyi.csv;tms_old_male_vs_old_female_tidyi.csv;tms_young_male_vs_young_female_tidyi.csv,
+Dendritic,M2,8,,,,,,,,,,not_applicable_nonpositive_gamma,,6.0
+Dendritic,M3,8,,,,,,,,,,not_applicable_nonpositive_gamma,,6.0
+Promonocyte,M4,8,0.0,0.0,630957.3444801194,23442.288153196783,0.03715352290971774,0.004895493928322208,2.47373551747206,0.0,630957.1666025189,edge_unresolved,mukin_old_spf_vs_old_gf_tidyi.csv;mukin_young_spf_vs_old_spf_tidyi.csv;mukin_young_spf_vs_young_gf_tidyi.csv;tms_old_male_vs_old_female_tidyi.csv;tms_young_male_vs_young_female_tidyi.csv,
+Promonocyte,M2,8,0.0,-1.96,39.81071705534725,0.025118864315094896,0.0006309573444802098,0.0033547668675626193,2.047793589318336,31.472351581235223,39.63283945479118,grid_interior,mukin_old_spf_vs_old_gf_tidyi.csv;mukin_young_spf_vs_old_spf_tidyi.csv;mukin_young_spf_vs_young_gf_tidyi.csv;tms_old_male_vs_old_female_tidyi.csv;tms_young_male_vs_young_female_tidyi.csv,
+Promonocyte,M3,8,1.84,0.0,194.9844599757904,0.15488166189124158,0.0007943282347243055,0.003355206227623692,2.047927680493043,31.463376796106168,2.844276558150674,grid_interior,mukin_old_spf_vs_old_gf_tidyi.csv;mukin_young_spf_vs_old_spf_tidyi.csv;mukin_young_spf_vs_young_gf_tidyi.csv;tms_old_male_vs_old_female_tidyi.csv;tms_young_male_vs_young_female_tidyi.csv,
+Myeloid progenitor,M2,8,,,,,,,,,,not_applicable_nonpositive_gamma,,3.0
+Myeloid progenitor,M3,8,,,,,,,,,,not_applicable_nonpositive_gamma,,3.0
+Myelomonocyte,M2,8,,,,,,,,,,not_applicable_nonpositive_gamma,,1.0
+Myelomonocyte,M3,8,,,,,,,,,,not_applicable_nonpositive_gamma,,1.0
+T CD8,M2,8,,,,,,,,,,not_applicable_nonpositive_gamma,,8.0
+T CD8,M3,8,,,,,,,,,,not_applicable_nonpositive_gamma,,8.0

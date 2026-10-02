@@ -1,0 +1,2 @@
+genes_input,genes_mapped_ensmusg,pct_genes_mapped,genes_removed,min_pct_genes_mapped,fail_pct_genes_mapped_lt,allow_low_mapping,mapping_warning
+31054,31053,99.99677980292394,1,70.0,30.0,False,False

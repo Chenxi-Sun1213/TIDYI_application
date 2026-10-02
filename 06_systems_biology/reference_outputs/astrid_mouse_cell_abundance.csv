@@ -1,0 +1,481 @@
+dataset,mouse_id,tissue,condition,age,sex,microbiota,n_total,cell_type,n_celltype,abundance,abundance_percent,in_all_8_conditions
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,B age,59,0.051709027169149865,5.170902716914987,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,B immature,111,0.09728308501314636,9.728308501314636,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,B naive,0,0.0,0.0,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,B pre,53,0.04645048203330412,4.645048203330412,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,ILC,16,0.014022787028921999,1.4022787028922,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,RBC_contam_monocyte,0,0.0,0.0,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,T CD8,27,0.02366345311130587,2.366345311130587,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,Treg,39,0.03418054338299737,3.4180543382997373,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,basophil,12,0.010517090271691499,1.0517090271691498,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,dendritic,53,0.04645048203330412,4.645048203330412,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,erythroblast,0,0.0,0.0,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,erythrocyte,0,0.0,0.0,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,macrophage,0,0.0,0.0,False
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,monocyte,156,0.13672217353198948,13.672217353198949,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,monocyte pro,94,0.08238387379491674,8.238387379491673,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,myeloid progenitor,122,0.10692375109553023,10.692375109553023,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,myelomonocyte,40,0.035056967572304996,3.5056967572304996,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,neutrophil,69,0.060473269062226116,6.047326906222612,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,neutrophil immature,46,0.040315512708150744,4.031551270815075,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,neutrophil maturing,190,0.16652059596844873,16.65205959684487,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,neutrophil progenitor,42,0.03680981595092025,3.6809815950920246,True
+Mukin,GF_19m_2,Marrow,Mukin GF old,19m,,GF,1141,plasma,12,0.010517090271691499,1.0517090271691498,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,B age,135,0.104570100697134,10.4570100697134,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,B immature,115,0.08907823392718822,8.907823392718822,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,B naive,0,0.0,0.0,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,B pre,40,0.030983733539891558,3.098373353989156,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,ILC,28,0.021688613477924088,2.168861347792409,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,RBC_contam_monocyte,14,0.010844306738962044,1.0844306738962044,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,T CD8,36,0.027885360185902403,2.78853601859024,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,Treg,42,0.032532920216886134,3.253292021688613,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,basophil,14,0.010844306738962044,1.0844306738962044,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,dendritic,62,0.048024786986831915,4.802478698683191,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,erythroblast,0,0.0,0.0,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,erythrocyte,0,0.0,0.0,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,macrophage,0,0.0,0.0,False
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,monocyte,175,0.13555383423702555,13.555383423702555,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,monocyte pro,104,0.08055770720371805,8.055770720371806,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,myeloid progenitor,51,0.039504260263361735,3.9504260263361735,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,myelomonocyte,57,0.044151820294345466,4.415182029434547,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,neutrophil,83,0.06429124709527498,6.429124709527498,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,neutrophil immature,63,0.048799380325329204,4.8799380325329205,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,neutrophil maturing,206,0.15956622773044152,15.956622773044153,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,neutrophil progenitor,35,0.027110766847405113,2.7110766847405112,True
+Mukin,GF_19m_3,Marrow,Mukin GF old,19m,,GF,1291,plasma,31,0.024012393493415957,2.4012393493415956,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,B age,0,0.0,0.0,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,B immature,305,0.2571669477234401,25.716694772344013,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,B naive,83,0.0699831365935919,6.99831365935919,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,B pre,46,0.0387858347386172,3.87858347386172,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,ILC,15,0.012647554806070826,1.2647554806070826,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,RBC_contam_T CD8,44,0.03709949409780776,3.709949409780776,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,RBC_contam_monocyte,28,0.023608768971332208,2.360876897133221,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,T CD8,14,0.011804384485666104,1.1804384485666104,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,Treg,0,0.0,0.0,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,basophil,25,0.021079258010118045,2.1079258010118047,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,dendritic,68,0.05733558178752108,5.733558178752108,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,erythroblast,0,0.0,0.0,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,erythrocyte,0,0.0,0.0,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,macrophage,0,0.0,0.0,False
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,monocyte,156,0.1315345699831366,13.15345699831366,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,monocyte pro,40,0.03372681281618887,3.372681281618887,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,myeloid progenitor,82,0.06913996627318718,6.913996627318718,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,myelomonocyte,19,0.016020236087689713,1.6020236087689714,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,neutrophil,52,0.04384485666104553,4.3844856661045535,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,neutrophil immature,78,0.0657672849915683,6.57672849915683,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,neutrophil maturing,109,0.09190556492411467,9.190556492411467,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,neutrophil progenitor,22,0.01854974704890388,1.854974704890388,True
+Mukin,GF_2m_2,Marrow,Mukin GF young,2m,,GF,1186,plasma,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,B age,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,B immature,272,0.18242790073775988,18.24279007377599,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,B naive,150,0.1006036217303823,10.06036217303823,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,B pre,206,0.1381623071763917,13.816230717639169,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,ILC,20,0.01341381623071764,1.341381623071764,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,RBC_contam_monocyte,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,T CD8,75,0.05030181086519115,5.030181086519115,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,Treg,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,basophil,24,0.01609657947686117,1.6096579476861168,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,dendritic,94,0.06304493628437291,6.3044936284372906,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,erythroblast,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,erythrocyte,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,macrophage,0,0.0,0.0,False
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,monocyte,162,0.10865191146881288,10.865191146881289,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,monocyte pro,113,0.07578806170355466,7.578806170355466,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,myeloid progenitor,50,0.0335345405767941,3.35345405767941,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,myelomonocyte,21,0.014084507042253521,1.4084507042253522,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,neutrophil,73,0.04896042924211938,4.896042924211938,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,neutrophil immature,75,0.05030181086519115,5.030181086519115,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,neutrophil maturing,130,0.08718980549966465,8.718980549966465,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,neutrophil progenitor,26,0.017437961099932932,1.7437961099932933,True
+Mukin,GF_2m_3,Marrow,Mukin GF young,2m,,GF,1491,plasma,0,0.0,0.0,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,B age,173,0.09453551912568306,9.453551912568306,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,B immature,0,0.0,0.0,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,B naive,65,0.03551912568306011,3.551912568306011,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,B pre,28,0.015300546448087432,1.530054644808743,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,ILC,23,0.012568306010928962,1.2568306010928962,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,RBC_contam_dendritic,170,0.09289617486338798,9.289617486338798,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,RBC_contam_monocyte,0,0.0,0.0,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,T CD8,314,0.17158469945355193,17.158469945355193,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,Treg,63,0.03442622950819672,3.4426229508196724,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,basophil,21,0.011475409836065573,1.1475409836065573,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,dendritic,133,0.0726775956284153,7.267759562841531,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,erythroblast,0,0.0,0.0,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,erythrocyte,0,0.0,0.0,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,macrophage,0,0.0,0.0,False
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,monocyte,215,0.11748633879781421,11.748633879781421,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,monocyte pro,133,0.0726775956284153,7.267759562841531,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,myeloid progenitor,19,0.010382513661202186,1.0382513661202186,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,myelomonocyte,64,0.034972677595628415,3.4972677595628414,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,neutrophil,77,0.04207650273224044,4.2076502732240435,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,neutrophil immature,106,0.05792349726775956,5.7923497267759565,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,neutrophil maturing,129,0.07049180327868852,7.049180327868852,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,neutrophil progenitor,45,0.02459016393442623,2.459016393442623,True
+Mukin,SPF_19m_1,Marrow,Mukin SPF old,19m,,SPF,1830,plasma,52,0.02841530054644809,2.841530054644809,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,B age,62,0.03297872340425532,3.2978723404255317,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,B immature,52,0.027659574468085105,2.7659574468085104,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,B naive,0,0.0,0.0,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,B pre,82,0.043617021276595745,4.361702127659575,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,ILC,38,0.02021276595744681,2.021276595744681,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,RBC_contam_monocyte,120,0.06382978723404255,6.382978723404255,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,T CD8,348,0.1851063829787234,18.51063829787234,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,Treg,48,0.02553191489361702,2.553191489361702,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,basophil,22,0.011702127659574468,1.1702127659574468,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,dendritic,223,0.11861702127659575,11.861702127659575,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,erythroblast,0,0.0,0.0,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,erythrocyte,0,0.0,0.0,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,macrophage,0,0.0,0.0,False
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,monocyte,168,0.08936170212765958,8.936170212765958,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,monocyte pro,138,0.07340425531914893,7.340425531914893,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,myeloid progenitor,47,0.025,2.5,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,myelomonocyte,35,0.018617021276595744,1.8617021276595744,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,neutrophil,118,0.0627659574468085,6.276595744680851,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,neutrophil immature,92,0.04893617021276596,4.8936170212765955,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,neutrophil maturing,194,0.10319148936170212,10.319148936170212,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,neutrophil progenitor,69,0.036702127659574466,3.6702127659574466,True
+Mukin,SPF_19m_2,Marrow,Mukin SPF old,19m,,SPF,1880,plasma,24,0.01276595744680851,1.276595744680851,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,B age,161,0.11917098445595854,11.917098445595855,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,B immature,50,0.037009622501850484,3.7009622501850483,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,B naive,122,0.09030347890451518,9.030347890451518,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,B pre,65,0.04811250925240563,4.811250925240563,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,ILC,33,0.02442635085122132,2.4426350851221317,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,RBC_contam_T CD8,69,0.05107327905255366,5.107327905255366,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,RBC_contam_dendritic,26,0.01924500370096225,1.924500370096225,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,RBC_contam_monocyte,0,0.0,0.0,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,T CD8,209,0.154700222057735,15.470022205773502,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,Treg,136,0.10066617320503331,10.066617320503331,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,basophil,0,0.0,0.0,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,dendritic,222,0.16432272390821615,16.432272390821616,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,erythroblast,0,0.0,0.0,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,erythrocyte,0,0.0,0.0,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,macrophage,0,0.0,0.0,False
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,monocyte,118,0.08734270910436713,8.734270910436713,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,monocyte pro,13,0.009622501850481125,0.9622501850481125,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,myeloid progenitor,43,0.03182827535159141,3.182827535159141,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,myelomonocyte,0,0.0,0.0,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,neutrophil,19,0.014063656550703183,1.4063656550703183,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,neutrophil immature,31,0.0229459659511473,2.29459659511473,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,neutrophil maturing,22,0.01628423390081421,1.6284233900814211,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,neutrophil progenitor,0,0.0,0.0,True
+Mukin,SPF_19m_3,Marrow,Mukin SPF old,19m,,SPF,1351,plasma,12,0.008882309400444115,0.8882309400444115,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,B age,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,B immature,97,0.09827760891590678,9.827760891590678,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,B naive,92,0.09321175278622088,9.321175278622087,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,B pre,65,0.06585612968591692,6.5856129685916915,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,ILC,0,0.0,0.0,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,RBC_contam_monocyte,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,T CD8,72,0.0729483282674772,7.29483282674772,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,Treg,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,basophil,10,0.010131712259371834,1.0131712259371835,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,dendritic,58,0.05876393110435663,5.8763931104356635,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,erythroblast,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,erythrocyte,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,macrophage,0,0.0,0.0,False
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,monocyte,121,0.12259371833839919,12.25937183383992,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,monocyte pro,67,0.06788247213779129,6.788247213779129,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,myeloid progenitor,22,0.022289766970618033,2.2289766970618032,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,myelomonocyte,0,0.0,0.0,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,neutrophil,62,0.06281661600810537,6.281661600810537,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,neutrophil immature,83,0.08409321175278622,8.409321175278622,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,neutrophil maturing,196,0.19858156028368795,19.858156028368796,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,neutrophil progenitor,42,0.0425531914893617,4.25531914893617,True
+Mukin,SPF_2m_3,Marrow,Mukin SPF young,2m,,SPF,987,plasma,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,B age,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,B immature,202,0.15514592933947774,15.514592933947775,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,B naive,123,0.0944700460829493,9.44700460829493,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,B pre,59,0.04531490015360983,4.531490015360983,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,ILC,28,0.021505376344086023,2.1505376344086025,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,RBC_contam_monocyte,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,T CD8,64,0.04915514592933948,4.915514592933948,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,Treg,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,basophil,24,0.018433179723502304,1.8433179723502304,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,dendritic,72,0.055299539170506916,5.529953917050691,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,erythroblast,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,erythrocyte,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,macrophage,0,0.0,0.0,False
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,monocyte,133,0.10215053763440861,10.21505376344086,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,monocyte pro,54,0.041474654377880185,4.147465437788019,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,myeloid progenitor,23,0.017665130568356373,1.7665130568356373,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,myelomonocyte,40,0.030721966205837174,3.0721966205837172,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,neutrophil,129,0.09907834101382489,9.90783410138249,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,neutrophil immature,109,0.0837173579109063,8.37173579109063,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,neutrophil maturing,178,0.13671274961597543,13.671274961597543,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,neutrophil progenitor,64,0.04915514592933948,4.915514592933948,True
+Mukin,SPF_2m_4,Marrow,Mukin SPF young,2m,,SPF,1302,plasma,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,B age,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,B immature,203,0.14336158192090395,14.336158192090394,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,B naive,95,0.067090395480226,6.7090395480225995,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,B pre,93,0.06567796610169492,6.567796610169492,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,ILC,22,0.015536723163841809,1.5536723163841808,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,RBC_contam_T CD8,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,RBC_contam_dendritic,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,RBC_contam_monocyte,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,T CD8,51,0.036016949152542374,3.6016949152542375,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,Treg,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,basophil,0,0.0,0.0,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,dendritic,62,0.043785310734463276,4.378531073446328,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,erythroblast,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,erythrocyte,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,macrophage,0,0.0,0.0,False
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,monocyte,185,0.1306497175141243,13.064971751412429,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,monocyte pro,53,0.03742937853107345,3.7429378531073447,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,myeloid progenitor,138,0.09745762711864407,9.745762711864407,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,myelomonocyte,30,0.0211864406779661,2.11864406779661,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,neutrophil,60,0.0423728813559322,4.23728813559322,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,neutrophil immature,130,0.09180790960451977,9.180790960451978,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,neutrophil maturing,231,0.163135593220339,16.3135593220339,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,neutrophil progenitor,63,0.04449152542372881,4.4491525423728815,True
+Mukin,SPF_2m_5,Marrow,Mukin SPF young,2m,,SPF,1416,plasma,0,0.0,0.0,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,B age,0,0.0,0.0,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,B immature,416,0.11128945960406635,11.128945960406634,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,B naive,252,0.06741573033707865,6.741573033707865,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,B pre,175,0.04681647940074907,4.681647940074907,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,ILC,16,0.004280363830925628,0.4280363830925628,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,T CD8,55,0.014713750668806848,1.4713750668806849,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,Treg,0,0.0,0.0,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,basophil,17,0.00454788657035848,0.45478865703584803,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,dendritic,65,0.017388978063135368,1.7388978063135367,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,erythroblast,308,0.08239700374531835,8.239700374531834,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,erythrocyte,743,0.19876939539860888,19.87693953986089,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,macrophage,84,0.02247191011235955,2.247191011235955,False
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,monocyte,176,0.047084002140181914,4.708400214018192,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,monocyte pro,81,0.021669341894060994,2.166934189406099,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,myeloid progenitor,110,0.029427501337613696,2.9427501337613697,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,myelomonocyte,50,0.01337613697164259,1.337613697164259,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,neutrophil,346,0.09256286784376672,9.256286784376671,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,neutrophil immature,289,0.07731407169609417,7.731407169609417,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,neutrophil maturing,470,0.12573568753344033,12.573568753344034,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,neutrophil progenitor,85,0.0227394328517924,2.2739432851792403,True
+TMS,1-M-62,Marrow,TMS male young,1m,male,,3738,plasma,0,0.0,0.0,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,B age,0,0.0,0.0,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,B immature,445,0.13103651354534745,13.103651354534746,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,B naive,217,0.06389870435806831,6.389870435806831,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,B pre,165,0.04858657243816254,4.858657243816254,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,ILC,29,0.008539458186101296,0.8539458186101295,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,T CD8,51,0.015017667844522967,1.5017667844522968,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,Treg,0,0.0,0.0,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,basophil,18,0.00530035335689046,0.5300353356890459,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,dendritic,50,0.014723203769140165,1.4723203769140165,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,erythroblast,0,0.0,0.0,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,erythrocyte,569,0.16755005889281507,16.755005889281506,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,macrophage,77,0.022673733804475855,2.2673733804475855,False
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,monocyte,198,0.05830388692579505,5.830388692579505,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,monocyte pro,64,0.01884570082449941,1.884570082449941,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,myeloid progenitor,123,0.036219081272084806,3.6219081272084805,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,myelomonocyte,66,0.019434628975265017,1.9434628975265018,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,neutrophil,401,0.11808009422850413,11.808009422850413,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,neutrophil immature,274,0.08068315665488811,8.06831566548881,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,neutrophil maturing,548,0.16136631330977622,16.13663133097762,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,neutrophil progenitor,101,0.029740871613663133,2.974087161366313,True
+TMS,1-M-63,Marrow,TMS male young,1m,male,,3396,plasma,0,0.0,0.0,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,B age,116,0.025472112428634168,2.547211242863417,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,B immature,150,0.03293807641633729,3.293807641633729,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,B naive,194,0.04259991216512956,4.259991216512956,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,B pre,126,0.02766798418972332,2.766798418972332,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,ILC,26,0.005709266578831796,0.5709266578831796,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,T CD8,84,0.01844532279314888,1.844532279314888,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,Treg,49,0.010759771629336846,1.0759771629336845,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,basophil,53,0.011638120333772508,1.1638120333772508,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,dendritic,68,0.014931927975406236,1.4931927975406236,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,erythroblast,0,0.0,0.0,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,erythrocyte,111,0.024374176548089592,2.437417654808959,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,macrophage,91,0.019982433025911288,1.9982433025911288,False
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,monocyte,312,0.06851119894598155,6.851119894598155,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,monocyte pro,54,0.011857707509881422,1.185770750988142,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,myeloid progenitor,131,0.028765920070267896,2.8765920070267894,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,myelomonocyte,196,0.043039086517347384,4.303908651734738,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,neutrophil,973,0.21365832235397453,21.365832235397452,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,neutrophil immature,558,0.1225296442687747,12.25296442687747,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,neutrophil maturing,1067,0.23429951690821257,23.42995169082126,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,neutrophil progenitor,160,0.03513394817742644,3.513394817742644,True
+TMS,21-F-54,Marrow,TMS female old,21m,female,,4554,plasma,35,0.007685551163812033,0.7685551163812033,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,B age,136,0.032143701252658946,3.2143701252658947,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,B immature,42,0.009926731269203497,0.9926731269203497,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,B naive,117,0.02765303710706689,2.765303710706689,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,B pre,32,0.007563223824155046,0.7563223824155046,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,ILC,36,0.008508626802174428,0.8508626802174427,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,T CD8,87,0.02056251477192153,2.056251477192153,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,Treg,92,0.021744268494445756,2.1744268494445755,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,basophil,40,0.009454029780193808,0.9454029780193808,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,dendritic,60,0.014181044670290712,1.4181044670290712,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,erythroblast,247,0.05837863389269676,5.8378633892696765,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,erythrocyte,0,0.0,0.0,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,macrophage,60,0.014181044670290712,1.4181044670290712,False
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,monocyte,260,0.06145119357125975,6.145119357125975,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,monocyte pro,65,0.015362798392814937,1.5362798392814938,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,myeloid progenitor,123,0.02907114157409596,2.907114157409596,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,myelomonocyte,158,0.03734341763176554,3.734341763176554,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,neutrophil,807,0.19073505081541006,19.073505081541008,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,neutrophil immature,641,0.15150082722760577,15.150082722760578,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,neutrophil maturing,1013,0.23942330418340818,23.942330418340816,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,neutrophil progenitor,142,0.03356180571968802,3.356180571968802,True
+TMS,21-F-55,Marrow,TMS female old,21m,female,,4231,plasma,73,0.017253604348853698,1.7253604348853697,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,B age,22,0.004731182795698925,0.4731182795698925,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,B immature,96,0.02064516129032258,2.064516129032258,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,B naive,197,0.04236559139784946,4.236559139784946,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,B pre,64,0.013763440860215054,1.3763440860215055,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,ILC,51,0.01096774193548387,1.096774193548387,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,T CD8,61,0.013118279569892474,1.3118279569892473,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,Treg,66,0.014193548387096775,1.4193548387096775,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,basophil,23,0.004946236559139785,0.49462365591397855,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,dendritic,38,0.008172043010752689,0.8172043010752689,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,erythroblast,323,0.06946236559139785,6.946236559139784,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,erythrocyte,1000,0.21505376344086022,21.50537634408602,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,macrophage,59,0.012688172043010752,1.2688172043010753,False
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,monocyte,290,0.06236559139784946,6.236559139784946,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,monocyte pro,43,0.009247311827956989,0.9247311827956989,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,myeloid progenitor,223,0.04795698924731183,4.795698924731183,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,myelomonocyte,98,0.021075268817204302,2.10752688172043,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,neutrophil,596,0.1281720430107527,12.817204301075268,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,neutrophil immature,572,0.12301075268817205,12.301075268817204,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,neutrophil maturing,630,0.13548387096774195,13.548387096774196,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,neutrophil progenitor,152,0.032688172043010756,3.2688172043010755,True
+TMS,24-M-58,Marrow,TMS male old,24m,male,,4650,plasma,46,0.00989247311827957,0.9892473118279571,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,B age,64,0.021018062397372743,2.1018062397372743,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,B immature,77,0.02528735632183908,2.528735632183908,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,B naive,241,0.07914614121510673,7.914614121510673,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,B pre,88,0.02889983579638752,2.889983579638752,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,ILC,47,0.015435139573070607,1.5435139573070606,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,T CD8,79,0.02594417077175698,2.594417077175698,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,Treg,74,0.024302134646962233,2.4302134646962235,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,basophil,0,0.0,0.0,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,dendritic,134,0.04400656814449918,4.400656814449918,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,erythroblast,0,0.0,0.0,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,erythrocyte,192,0.06305418719211822,6.305418719211822,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,macrophage,186,0.061083743842364535,6.108374384236454,False
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,monocyte,260,0.08538587848932677,8.538587848932677,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,monocyte pro,18,0.005911330049261084,0.5911330049261084,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,myeloid progenitor,300,0.09852216748768473,9.852216748768473,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,myelomonocyte,166,0.05451559934318555,5.451559934318555,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,neutrophil,123,0.04039408866995074,4.039408866995074,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,neutrophil immature,336,0.1103448275862069,11.03448275862069,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,neutrophil maturing,356,0.11691297208538588,11.691297208538588,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,neutrophil progenitor,270,0.08866995073891626,8.866995073891626,True
+TMS,24-M-59,Marrow,TMS male old,24m,male,,3045,plasma,34,0.01116584564860427,1.116584564860427,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,B age,505,0.12801013941698353,12.801013941698352,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,B immature,54,0.013688212927756654,1.3688212927756656,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,B naive,0,0.0,0.0,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,B pre,20,0.005069708491761723,0.5069708491761723,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,ILC,15,0.0038022813688212928,0.38022813688212925,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,T CD8,107,0.02712294043092522,2.712294043092522,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,Treg,68,0.01723700887198986,1.723700887198986,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,basophil,12,0.003041825095057034,0.3041825095057034,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,dendritic,65,0.016476552598225603,1.6476552598225602,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,erythroblast,472,0.11964512040557668,11.964512040557668,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,erythrocyte,1197,0.30342205323193916,30.342205323193916,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,macrophage,108,0.02737642585551331,2.737642585551331,False
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,monocyte,102,0.02585551330798479,2.585551330798479,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,monocyte pro,40,0.010139416983523447,1.0139416983523446,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,myeloid progenitor,11,0.002788339670468948,0.2788339670468948,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,myelomonocyte,40,0.010139416983523447,1.0139416983523446,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,neutrophil,439,0.11128010139416984,11.128010139416984,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,neutrophil immature,206,0.05221799746514576,5.221799746514575,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,neutrophil maturing,431,0.10925221799746515,10.925221799746515,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,neutrophil progenitor,31,0.007858048162230671,0.7858048162230671,True
+TMS,24-M-60,Marrow,TMS male old,24m,male,,3945,plasma,22,0.005576679340937896,0.5576679340937896,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,B age,0,0.0,0.0,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,B immature,18,0.005096262740656852,0.5096262740656852,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,B naive,228,0.06455266138165346,6.455266138165346,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,B pre,0,0.0,0.0,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,ILC,0,0.0,0.0,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,T CD8,70,0.019818799546998868,1.9818799546998869,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,Treg,47,0.013306908267270668,1.3306908267270667,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,basophil,22,0.00622876557191393,0.622876557191393,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,dendritic,19,0.005379388448471121,0.5379388448471121,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,erythroblast,257,0.07276330690826727,7.276330690826727,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,erythrocyte,1200,0.33975084937712347,33.975084937712346,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,macrophage,28,0.007927519818799546,0.7927519818799547,False
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,monocyte,141,0.039920724801812,3.9920724801812004,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,monocyte pro,50,0.014156285390713477,1.4156285390713477,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,myeloid progenitor,0,0.0,0.0,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,myelomonocyte,35,0.009909399773499434,0.9909399773499434,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,neutrophil,492,0.1392978482446206,13.929784824462061,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,neutrophil immature,250,0.07078142695356739,7.078142695356739,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,neutrophil maturing,621,0.1758210645526614,17.58210645526614,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,neutrophil progenitor,38,0.010758776896942242,1.0758776896942241,True
+TMS,24-M-61,Marrow,TMS male old,24m,male,,3532,plasma,16,0.004530011325028313,0.4530011325028313,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,B age,31,0.0077558168626469855,0.7755816862646986,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,B immature,293,0.07330497873405054,7.330497873405053,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,B naive,498,0.12459344508381286,12.459344508381285,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,B pre,239,0.059794846134600954,5.979484613460095,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,ILC,39,0.009757317988491368,0.9757317988491369,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,T CD8,91,0.02276707530647986,2.276707530647986,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,Treg,21,0.005253940455341506,0.5253940455341506,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,basophil,33,0.00825619214410808,0.825619214410808,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,dendritic,132,0.03302476857643232,3.302476857643232,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,erythroblast,105,0.02626970227670753,2.626970227670753,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,erythrocyte,338,0.0845634225669252,8.45634225669252,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,macrophage,32,0.008006004503377533,0.8006004503377533,False
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,monocyte,350,0.08756567425569177,8.756567425569177,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,monocyte pro,64,0.016012009006755066,1.6012009006755066,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,myeloid progenitor,57,0.01426069552164123,1.4260695521641231,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,myelomonocyte,94,0.023517638228671502,2.35176382286715,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,neutrophil,681,0.1703777833375031,17.03777833375031,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,neutrophil immature,221,0.05529146860145109,5.529146860145109,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,neutrophil maturing,603,0.1508631473605204,15.086314736052039,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,neutrophil progenitor,75,0.018764073054791094,1.8764073054791095,True
+TMS,3-F-56,Marrow,TMS female young,3m,female,,3997,plasma,0,0.0,0.0,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,B age,22,0.0055234747677629925,0.5523474767762993,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,B immature,200,0.05021340697966357,5.021340697966357,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,B naive,457,0.11473763494853126,11.473763494853126,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,B pre,177,0.04443886517700226,4.443886517700226,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,ILC,34,0.008536279186542806,0.8536279186542807,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,RBC_contam_T CD8,0,0.0,0.0,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,RBC_contam_dendritic,0,0.0,0.0,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,RBC_contam_monocyte,0,0.0,0.0,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,T CD8,50,0.012553351744915892,1.2553351744915893,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,Treg,41,0.010293748430831032,1.0293748430831033,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,basophil,49,0.012302284710017574,1.2302284710017575,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,dendritic,185,0.0464474014561888,4.64474014561888,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,erythroblast,274,0.06879236756213909,6.879236756213909,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,erythrocyte,223,0.05598794878232488,5.598794878232488,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,macrophage,71,0.01782575947778057,1.782575947778057,False
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,monocyte,382,0.09590760733115741,9.590760733115742,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,monocyte pro,54,0.013557619884509164,1.3557619884509164,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,myeloid progenitor,192,0.04820487070047703,4.820487070047703,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,myelomonocyte,44,0.011046949535525985,1.1046949535525985,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,neutrophil,524,0.13155912628671856,13.155912628671857,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,neutrophil immature,306,0.07682651267888527,7.682651267888526,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,neutrophil maturing,573,0.14386141099673613,14.386141099673614,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,neutrophil progenitor,103,0.02585990459452674,2.585990459452674,True
+TMS,3-F-57,Marrow,TMS female young,3m,female,,3983,plasma,22,0.0055234747677629925,0.5523474767762993,False
