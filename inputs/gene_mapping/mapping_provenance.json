@@ -1,0 +1,29 @@
+{
+  "species": "Mus musculus",
+  "taxon_id": 10090,
+  "policy": "Unique legacy-cache result wins; otherwise only a single candidate ID is resolved.",
+  "annotation_release": "Not recorded in the source files; this is a frozen mixed-source reference.",
+  "sources": {
+    "legacy_cache": {
+      "path": "/scratch/chenxi.sun/TIDYI_thesis_code_organized/data/reference/gene_cache/mouse_symbol_to_ensembl.csv",
+      "sha256": "35b66c053195148a57c4fd21308fcde2ff3967502a239a2c4fff4f921608c17e"
+    },
+    "aer_raw_features": {
+      "path": "/srv/mfs/hausserlab/data/AER2025_Juliane/aer_six_samples_raw_counts.h5ad",
+      "sha256": "1a941e49f930e5dbb73b847c8dfcdf605fc2d5c9a1e14154bf3eff63cf95bbad"
+    },
+    "biomart_orthologues": {
+      "path": "/scratch/chenxi.sun/RA_project_handover/inputs/classifier_data/mart_export_gene_names.txt",
+      "sha256": "e12c2f4368385a33c445807b1bb957fb02b935461884c0967148c8e286f2ff20"
+    }
+  },
+  "mapping_sha256": "5079de122cccf15b4edfc687d2e22918fe49ea79a5683c91deb8f623233da866",
+  "symbol_count": 41870,
+  "status_counts": {
+    "resolved_legacy_cache": 25428,
+    "resolved_local_supplement": 14520,
+    "unmapped": 1884,
+    "ambiguous": 38
+  },
+  "symbols_with_multiple_candidate_ids": 162
+}
