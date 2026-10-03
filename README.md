@@ -1,4 +1,4 @@
-# RA project handover
+# TIDYI application
 
 This directory is the clean handover package for the six formal RA analyses.
 The original project remains at `/scratch/chenxi.sun/RA project` as historical
