@@ -48,6 +48,7 @@ from handover_utils import (  # noqa: E402
     run_notebook_master,
     tidyi_runtime_capture_cell,
 )
+from gene_mapping import GENE_MAPPING_FILE  # noqa: E402
 
 
 SOURCE_NOTEBOOK = Path(__file__).with_name("rates_reproduce_test.ipynb")
@@ -66,12 +67,12 @@ EXPECTED_OUTPUT_NAMES = (
     "mukin_sk_age_19m_sex_F_microbiota_SPF_tissue_SK_SPF_19m_2_vs_SPF_19m_3.png",
     "mukin_sk_age_2m_sex_F_microbiota_GF_tissue_SK_GF_2m_3_vs_GF_2m_1.png",
     "mukin_sk_age_2m_sex_F_microbiota_SPF_tissue_SK_SPF_2m_4_vs_SPF_2m_5.png",
-    "tms_bm_age_18m_sex_M_microbiota_nan_tissue_BM_18-M-52_vs_18-M-53.png",
-    "tms_bm_age_1m_sex_M_microbiota_nan_tissue_BM_1-M-62_vs_1-M-63.png",
-    "tms_bm_age_21m_sex_F_microbiota_nan_tissue_BM_21-F-54_vs_21-F-55.png",
-    "tms_bm_age_24m_sex_M_microbiota_nan_tissue_BM_24-M-58_vs_24-M-60.png",
-    "tms_bm_age_30m_sex_M_microbiota_nan_tissue_BM_30-M-2_vs_30-M-5.png",
-    "tms_bm_age_3m_sex_F_microbiota_nan_tissue_BM_3-F-57_vs_3-F-56.png",
+    "tms_bm_age_18m_sex_M_microbiota_NA_tissue_BM_18-M-52_vs_18-M-53.png",
+    "tms_bm_age_1m_sex_M_microbiota_NA_tissue_BM_1-M-62_vs_1-M-63.png",
+    "tms_bm_age_21m_sex_F_microbiota_NA_tissue_BM_21-F-54_vs_21-F-55.png",
+    "tms_bm_age_24m_sex_M_microbiota_NA_tissue_BM_24-M-58_vs_24-M-60.png",
+    "tms_bm_age_30m_sex_M_microbiota_NA_tissue_BM_30-M-2_vs_30-M-5.png",
+    "tms_bm_age_3m_sex_F_microbiota_NA_tissue_BM_3-F-57_vs_3-F-56.png",
     "pairwise_rate_comparisons.csv",
     "pairwise_rate_pearson_correlations.csv",
     "rate_reproducibility_connected_dot_plot.pdf",
@@ -134,6 +135,7 @@ def main() -> None:
             MUKIN_BM_ASTRID_DIR,
             MUKIN_SKIN_ASTRID_DIR,
             MUKIN_BM_ASTRID_RESULTS,
+            GENE_MAPPING_FILE,
         ),
         manifest_path=OUTPUT_DIR / "master_rate_reproducibility_run_manifest.json",
         kernel_name=args.kernel_name,
@@ -146,6 +148,7 @@ def main() -> None:
             "tidyi_version_label": args.tidyi_version_label,
             "tidyi_model_label": args.tidyi_model_label,
             "tidyi_formula_label": args.tidyi_formula_label,
+            "gene_mapping_file": str(GENE_MAPPING_FILE),
             "annotation_columns": {
                 "tms_bm": "celltype_hb",
                 "mukin_bm": "celltype_hb",
