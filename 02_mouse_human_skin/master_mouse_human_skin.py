@@ -16,8 +16,8 @@ Replacement TIDYI run:
 External inputs:
 - thesis_project/mukin_qcdata/AllRef_skin_0204
   Produced by: thesis Mukin skin ASTRID workflow.
-- classifier_data/mart_export_gene_names.txt
-  Produced externally with the installed classifier-data package.
+- inputs/classifier_data/mart_export_gene_names.txt
+  Frozen local copy of the historical classifier-data mapping.
 
 The source annotation is ``SingleR_CellType``. The additional
 ``kc_human_validation`` label is produced here from Krt10/Krt15 expression and
@@ -66,7 +66,7 @@ CLASSIFIER_GENE_MAP = RA_ROOT / "inputs/classifier_data/mart_export_gene_names.t
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--kernel-name", default="python3")
+    parser.add_argument("--kernel-name", default="scx_py310")
     parser.add_argument(
         "--tidyi-source-root",
         type=Path,
@@ -114,6 +114,8 @@ def main() -> None:
             "tidyi_version_label": args.tidyi_version_label,
             "tidyi_model_label": args.tidyi_model_label,
             "tidyi_formula_label": args.tidyi_formula_label,
+            "gene_mapping_file": str(CLASSIFIER_GENE_MAP),
+            "gene_mapping_policy": "legacy mart mapping; retain only symbols present in mart",
             "source_annotation_column": "SingleR_CellType",
             "validation_annotation_column": "kc_human_validation",
             "keratinocyte_rule": "Krt10 > Krt15 - 1.2 => differentiated; otherwise progenitor",

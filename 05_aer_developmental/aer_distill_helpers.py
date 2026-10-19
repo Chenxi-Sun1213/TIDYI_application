@@ -13,6 +13,11 @@ import sys
 from pathlib import Path
 from typing import Any, Iterable
 
+HANDOVER_ROOT = Path(__file__).resolve().parents[1]
+if str(HANDOVER_ROOT) not in sys.path:
+    sys.path.insert(0, str(HANDOVER_ROOT))
+from gene_mapping import GENE_MAPPING_FILE, MOUSE_ENSEMBL_PATTERN, map_mouse_symbols_to_ensembl
+
 import anndata as ad
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,7 +38,6 @@ def ensure_output_dirs(output_root: Path) -> dict[str, Path]:
         "tidyi": output_root / "05_tidyi",
         "final": output_root / "06_final",
         "growth_decomposition": output_root / "07_growth_rate_decomposition",
-        "sample_mean_umi": output_root / "08_sample_mean_umi",
     }
     for path in paths.values():
         path.mkdir(parents=True, exist_ok=True)
@@ -770,23 +774,27 @@ def prepare_mouse_tidyi(
     fail_pct_genes_mapped_lt: float = 30.0,
     allow_low_mapping: bool = False,
 ) -> tuple[ad.AnnData, pd.DataFrame]:
-    """Keep valid mouse Ensembl genes and preserve symbols for final restoration."""
+    """Retain input IDs and unresolved symbols using the replay3 cache policy."""
     require_columns(adata.var, ["gene_ids", "gene_symbol"], "adata.var")
     gene_ids = adata.var["gene_ids"].astype(str)
-    valid = gene_ids.str.startswith("ENSMUSG").to_numpy()
-    prepared = adata[:, valid].copy()
+    input_ids_valid = gene_ids.str.fullmatch(MOUSE_ENSEMBL_PATTERN)
+    prepared = adata.copy()
     prepared.var["original_var_name"] = prepared.var_names.astype(str)
-    prepared.var_names = pd.Index(prepared.var["gene_ids"].astype(str))
-    if not prepared.var_names.is_unique:
-        raise ValueError("Mouse Ensembl IDs are not unique after TIDYI preparation")
+    prepared.var_names = pd.Index(gene_ids.where(input_ids_valid, adata.var["gene_symbol"].astype(str)))
+    map_mouse_symbols_to_ensembl(prepared)
+    prepared.var["gene_ids"] = prepared.var_names.astype(str)
+    mapped_count = int(input_ids_valid.sum()) + prepared.uns["local_gene_mapping"]["symbols_mapped"]
     prepared.X = prepared.layers["counts"].copy()
     prepared.layers["counts"] = prepared.X.copy()
-    pct_mapped = 100.0 * prepared.n_vars / max(1, adata.n_vars)
+    pct_mapped = 100.0 * mapped_count / max(1, adata.n_vars)
     report = pd.DataFrame(
         [
             {
                 "genes_input": int(adata.n_vars),
-                "genes_mapped_ensmusg": int(prepared.n_vars),
+                "mapping_file": str(GENE_MAPPING_FILE),
+                "genes_using_input_ids": int(input_ids_valid.sum()),
+                "symbols_mapped_from_local_reference": prepared.uns["local_gene_mapping"]["symbols_mapped"],
+                "genes_mapped_ensmusg": mapped_count,
                 "pct_genes_mapped": pct_mapped,
                 "genes_removed": int(adata.n_vars - prepared.n_vars),
                 "min_pct_genes_mapped": float(min_pct_genes_mapped),
@@ -1102,14 +1110,13 @@ def plot_celltype_percentages_by_sample(
 def run_growth_rate_decomposition_method3(
     rates_path: Path,
     typical_cv_path: Path,
-    reference_cv_detail_path: Path,
     output_dir: Path,
     contrasts: list[dict[str, str]],
     *,
     cv_dataset: str = "Mukin",
     regulation_magnitude_threshold: float = 2 * np.log(2) / (24 * 3),
 ) -> tuple[pd.DataFrame, plt.Figure, plt.Figure, plt.Figure]:
-    """Apply the legacy Method 3 decomposition to AER TIDYI rates."""
+    """Apply Method 3 to AER TIDYI rates using AER global mean rates."""
     import seaborn as sns
     from matplotlib.colors import ListedColormap
     from matplotlib.patches import Patch
@@ -1133,16 +1140,10 @@ def run_growth_rate_decomposition_method3(
         raise ValueError("AER TIDYI rates contain duplicate genotype/stage/cell-type rows")
 
     cv_values = pd.read_csv(typical_cv_path)
-    reference_cv = pd.read_csv(reference_cv_detail_path)
     require_columns(
         cv_values,
         ["dataset", "cv_source_dataset", "rate", "cv_rate", "typical_cv"],
         "typical CV table",
-    )
-    require_columns(
-        reference_cv,
-        ["dataset", "rate", "mean_rate", "cv_status"],
-        "reference CV detail table",
     )
 
     cv_subset = cv_values[cv_values["dataset"].eq(cv_dataset)].copy()
@@ -1150,24 +1151,11 @@ def run_growth_rate_decomposition_method3(
         raise ValueError(f"Expected proliferation and death CV rows for {cv_dataset}")
     cv_subset = cv_subset.set_index("rate")
 
-    reference_global_means: dict[str, float] = {}
     source_datasets: dict[str, str] = {}
     source_rates: dict[str, str] = {}
     for rate in ["prolif_rate", "death_rate"]:
-        source_dataset = str(cv_subset.at[rate, "cv_source_dataset"])
-        source_rate = str(cv_subset.at[rate, "cv_rate"])
-        source_rows = reference_cv[
-            reference_cv["dataset"].eq(source_dataset)
-            & reference_cv["rate"].eq(source_rate)
-            & reference_cv["cv_status"].eq("computed")
-        ]
-        if source_rows.empty:
-            raise ValueError(
-                f"No computed reference rows for {source_dataset} {source_rate}"
-            )
-        reference_global_means[rate] = float(source_rows["mean_rate"].mean())
-        source_datasets[rate] = source_dataset
-        source_rates[rate] = source_rate
+        source_datasets[rate] = str(cv_subset.at[rate, "cv_source_dataset"])
+        source_rates[rate] = str(cv_subset.at[rate, "cv_rate"])
 
     proliferation_cv = float(cv_subset.at["prolif_rate", "typical_cv"])
     death_cv = float(cv_subset.at["death_rate", "typical_cv"])
@@ -1178,10 +1166,6 @@ def run_growth_rate_decomposition_method3(
     method3_k = (
         death_cv * aer_global_means["death_rate"]
         / (proliferation_cv * aer_global_means["prolif_rate"])
-    )
-    method3_k_mukin_reference = (
-        death_cv * reference_global_means["death_rate"]
-        / (proliferation_cv * reference_global_means["prolif_rate"])
     )
 
     required_contrast_keys = {
@@ -1269,9 +1253,6 @@ def run_growth_rate_decomposition_method3(
                     "regulation_threshold": regulation_magnitude_threshold,
                     "passes_magnitude_filter": passes_filter,
                     "method3_k": method3_k,
-                    "method3_k_mukin_reference_sensitivity": (
-                        method3_k_mukin_reference
-                    ),
                     "death_fraction_m3": death_fraction,
                     "death_fraction_m3_magnitude_filtered": (
                         death_fraction if passes_filter else np.nan
@@ -1291,12 +1272,6 @@ def run_growth_rate_decomposition_method3(
                         "prolif_rate"
                     ],
                     "death_global_mean_used": aer_global_means["death_rate"],
-                    "proliferation_global_mean_reference": reference_global_means[
-                        "prolif_rate"
-                    ],
-                    "death_global_mean_reference": reference_global_means[
-                        "death_rate"
-                    ],
                     "proliferation_cv_source_dataset": source_datasets[
                         "prolif_rate"
                     ],
@@ -1522,98 +1497,6 @@ def run_growth_rate_decomposition_method3(
         dpi=300,
     )
     return results, unfiltered_figure, filtered_figure, histogram_figure
-
-
-def plot_sample_mean_umi(
-    adata_path: Path,
-    sample_col: str,
-    output_path: Path,
-    title: str,
-    *,
-    include_samples: Iterable[str] | None = None,
-    color: str = "#4C78A8",
-) -> tuple[pd.DataFrame, plt.Figure]:
-    """Plot mean raw UMI counts per retained cell for every selected sample."""
-    from matplotlib.ticker import FuncFormatter
-
-    adata = ad.read_h5ad(adata_path, backed="r")
-    try:
-        require_columns(adata.obs, [sample_col, "total_counts"], str(adata_path))
-        obs = adata.obs[[sample_col, "total_counts"]].copy()
-    finally:
-        adata.file.close()
-
-    obs[sample_col] = obs[sample_col].astype(str)
-    if include_samples is None:
-        sample_order = sorted(obs[sample_col].unique())
-    else:
-        sample_order = list(dict.fromkeys(str(sample) for sample in include_samples))
-        missing_samples = sorted(set(sample_order).difference(obs[sample_col]))
-        if missing_samples:
-            raise ValueError(
-                f"{adata_path} is missing selected samples: {missing_samples}"
-            )
-        obs = obs[obs[sample_col].isin(sample_order)].copy()
-
-    if obs["total_counts"].isna().any() or (obs["total_counts"] < 0).any():
-        raise ValueError(f"Invalid total_counts values in {adata_path}")
-
-    overall_mean_umi = float(obs["total_counts"].mean())
-    summary = (
-        obs.groupby(sample_col, observed=True)["total_counts"]
-        .agg(n_cells="size", mean_umi="mean")
-        .reindex(sample_order)
-        .reset_index()
-        .rename(columns={sample_col: "sample"})
-    )
-
-    figure_width = min(20.0, max(6.0, 2.6 + 0.24 * len(summary)))
-    figure, axis = plt.subplots(
-        figsize=(figure_width, 5.2), constrained_layout=True
-    )
-    x_positions = np.arange(len(summary))
-    bars = axis.bar(
-        x_positions,
-        summary["mean_umi"],
-        color=color,
-        edgecolor="white",
-        linewidth=0.4,
-    )
-    axis.axhline(
-        overall_mean_umi,
-        color="#D62728",
-        linestyle="--",
-        linewidth=1.0,
-        label=f"Overall mean = {overall_mean_umi:,.0f}",
-    )
-    axis.set_title(title, fontsize=10)
-    axis.set_xlabel("Sample", fontsize=8)
-    axis.set_ylabel("Mean UMI counts per cell", fontsize=8)
-    axis.set_xticks(x_positions)
-    axis.set_xticklabels(
-        summary["sample"], rotation=90, ha="center", fontsize=6
-    )
-    axis.tick_params(axis="y", labelsize=7)
-    axis.yaxis.set_major_formatter(
-        FuncFormatter(lambda value, _: f"{value:,.0f}")
-    )
-    axis.grid(axis="y", color="#D9D9D9", linewidth=0.5, alpha=0.7)
-    axis.set_axisbelow(True)
-    axis.spines[["top", "right"]].set_visible(False)
-    axis.legend(loc="upper right", frameon=False, fontsize=7)
-    if len(summary) <= 12:
-        axis.bar_label(
-            bars,
-            labels=[f"{value:,.0f}" for value in summary["mean_umi"]],
-            padding=2,
-            fontsize=7,
-        )
-        axis.margins(y=0.12)
-
-    output_path = Path(output_path)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    figure.savefig(output_path, dpi=300, bbox_inches="tight")
-    return summary, figure
 
 
 def final_audit(

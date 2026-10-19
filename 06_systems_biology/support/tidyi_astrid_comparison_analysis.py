@@ -6,16 +6,22 @@ from __future__ import annotations
 import argparse
 import logging
 import os
-import re
-import time
+import sys
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+RA_ROOT = Path(__file__).resolve().parents[2]
+if str(RA_ROOT) not in sys.path:
+    sys.path.insert(0, str(RA_ROOT))
+from gene_mapping import GENE_MAPPING_FILE, load_mouse_gene_mapping, map_mouse_symbols_to_ensembl
 
 os.environ.setdefault("NUMBA_CACHE_DIR", "/tmp/numba_cache")
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 
 import anndata as ad
+from anndata import ImplicitModificationWarning
 import numpy as np
 import pandas as pd
 import scanpy as sc
@@ -29,7 +35,8 @@ from tidyi_comparison_analysis import (
     FINAL_TIDY_COLUMNS,
     PERCENTAGE_COL,
     expand_analysis_sample_column,
-    run_tidyi_analysis,
+    SP_CT_COL,
+    require_columns,
 )
 from tidyi_plot_results import (
     add_derived_metrics,
@@ -51,7 +58,6 @@ DEFAULT_OUTPUT_ROOT = WORKSPACE_ROOT / "TIDYI_Astrid-anno"
 DEFAULT_MUKIN_BM_ROOT = THESIS_PROJECT_ROOT / "mukin_qcdata" / "AllRef_BM_0204"
 DEFAULT_MUKIN_SKIN_ROOT = THESIS_PROJECT_ROOT / "mukin_qcdata" / "AllRef_skin_0204"
 DEFAULT_TMS_BM_ROOT = THESIS_PROJECT_ROOT / "tms_qcdata" / "AllRef_BM_0204"
-DEFAULT_GENE_CACHE_CSV = WORKSPACE_ROOT / ".tidyi_gene_cache" / "mouse_symbol_to_ensembl.csv"
 
 MUKIN_RBC_GENES = ("Hbb-bs", "Hbb-bt", "Hba-a1", "Hba-a2", "Hbb-bh1", "Hbb-bh2")
 TMS_REMOVE_CELLTYPES = {
@@ -169,7 +175,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mukin-skin-root", type=Path, default=DEFAULT_MUKIN_SKIN_ROOT)
     parser.add_argument("--tms-bm-root", type=Path, default=DEFAULT_TMS_BM_ROOT)
     parser.add_argument("--output-root", type=Path, default=DEFAULT_OUTPUT_ROOT)
-    parser.add_argument("--gene-cache-csv", type=Path, default=DEFAULT_GENE_CACHE_CSV)
     parser.add_argument(
         "--comparisons",
         nargs="+",
@@ -177,7 +182,6 @@ def parse_args() -> argparse.Namespace:
         help="Subset of supported comparison names to run.",
     )
     parser.add_argument("--raw-layer", default="raw")
-    parser.add_argument("--smoke-test", action="store_true")
     parser.add_argument(
         "--log-level",
         default="INFO",
@@ -398,162 +402,73 @@ def prepare_tms_dataset(tms_bm_root: Path) -> sc.AnnData:
     return tms
 
 
-def extract_ensembl_gene(value: Any) -> Any:
-    if isinstance(value, list):
-        for entry in value:
-            if isinstance(entry, dict) and "gene" in entry:
-                return entry["gene"]
-        return np.nan
-    if isinstance(value, dict):
-        return value.get("gene", np.nan)
-    return value
-
-
-def load_gene_cache(cache_csv: Path) -> pd.DataFrame:
-    if not cache_csv.exists():
-        return pd.DataFrame(columns=["symbol", "ensembl_gene_clean"])
-    cache = pd.read_csv(cache_csv, dtype={"symbol": "string", "ensembl_gene_clean": "string"})
-    if "symbol" not in cache.columns or "ensembl_gene_clean" not in cache.columns:
-        raise ValueError(f"Gene cache is missing required columns: {cache_csv}")
-    cache["symbol"] = normalize_string_series(cache["symbol"])
-    cache["ensembl_gene_clean"] = normalize_string_series(cache["ensembl_gene_clean"])
-    cache = cache.dropna(subset=["symbol"]).drop_duplicates(subset=["symbol"], keep="last")
-    return cache
-
-
-def save_gene_cache(cache: pd.DataFrame, cache_csv: Path) -> None:
-    ensure_output_dir(cache_csv.parent)
-    cache = cache.copy().sort_values("symbol").drop_duplicates(subset=["symbol"], keep="last")
-    temp_path = cache_csv.with_suffix(cache_csv.suffix + ".tmp")
-    cache.to_csv(temp_path, index=False)
-    temp_path.replace(cache_csv)
-
-
-def build_gene_mapping_with_local_cache(
-    gene_names: list[str],
-    species: str,
-    cache_csv: Path,
-    batch_size: int = 1000,
-    max_retries: int = 4,
-) -> dict[str, str]:
-    import mygene
-
-    unique_gene_names = list(dict.fromkeys(map(str, gene_names)))
-    cache = load_gene_cache(cache_csv)
-    cached_symbols = set(cache["symbol"].dropna().astype(str).tolist())
-    missing_symbols = [symbol for symbol in unique_gene_names if symbol not in cached_symbols]
-
-    if missing_symbols:
-        LOGGER.info(
-            "Gene cache %s has %s hits and %s misses for %s requested genes",
-            cache_csv,
-            len(unique_gene_names) - len(missing_symbols),
-            len(missing_symbols),
-            len(unique_gene_names),
-        )
-        mygene_client = mygene.MyGeneInfo()
-        for batch_start in range(0, len(missing_symbols), batch_size):
-            batch = missing_symbols[batch_start : batch_start + batch_size]
-            batch_index = (batch_start // batch_size) + 1
-            total_batches = (len(missing_symbols) + batch_size - 1) // batch_size
-            LOGGER.info(
-                "Querying mygene for uncached symbols batch %s/%s (%s genes)",
-                batch_index,
-                total_batches,
-                len(batch),
-            )
-            batch_result = None
-            for attempt in range(1, max_retries + 1):
-                try:
-                    batch_result = mygene_client.querymany(
-                        batch,
-                        scopes="symbol",
-                        species=species,
-                        fields="ensembl.gene",
-                        as_dataframe=True,
-                    )
-                    break
-                except Exception as exc:
-                    if attempt == max_retries:
-                        LOGGER.error("mygene batch %s/%s failed after %s attempts", batch_index, total_batches, attempt)
-                        raise
-                    sleep_seconds = attempt * 5
-                    LOGGER.warning(
-                        "mygene batch %s/%s attempt %s failed: %s. Retrying in %ss",
-                        batch_index,
-                        total_batches,
-                        attempt,
-                        exc,
-                        sleep_seconds,
-                    )
-                    time.sleep(sleep_seconds)
-
-            batch_result["symbol"] = batch_result.index.astype(str)
-            if "ensembl.gene" in batch_result.columns:
-                batch_result["ensembl_gene_clean"] = batch_result["ensembl.gene"].apply(extract_ensembl_gene)
-                batch_cache = (
-                    pd.DataFrame({"symbol": batch})
-                    .merge(batch_result[["symbol", "ensembl_gene_clean"]], on="symbol", how="left")
-                )
-            else:
-                batch_cache = pd.DataFrame({"symbol": batch, "ensembl_gene_clean": pd.NA})
-            cache = pd.concat([cache, batch_cache], ignore_index=True)
-            save_gene_cache(cache, cache_csv)
-            LOGGER.info("Updated gene cache after batch %s/%s: %s", batch_index, total_batches, cache_csv)
-    else:
-        LOGGER.info("Gene cache %s covers all %s requested genes", cache_csv, len(unique_gene_names))
-
-    cache = load_gene_cache(cache_csv)
-    mapping_df = cache.dropna(subset=["ensembl_gene_clean"])
-    return dict(zip(mapping_df["symbol"].astype(str), mapping_df["ensembl_gene_clean"].astype(str)))
-
-
-def ensure_ensembl_ids_with_local_cache(
+def ensure_ensembl_ids_with_local_mapping(
     adata: sc.AnnData,
-    species: str,
-    cache_csv: Path,
+    mapping_csv: Path = GENE_MAPPING_FILE,
 ) -> sc.AnnData:
     adata = adata.copy()
-    ensembl_pattern = re.compile(r"^ENS[A-Z]*G\d+")
-    first_genes = list(map(str, adata.var_names[:10]))
-    is_ensembl_ids = all(ensembl_pattern.match(gene) for gene in first_genes)
-    if is_ensembl_ids:
-        LOGGER.info("Gene names already look like Ensembl IDs. Skipping conversion.")
-        return adata
-
-    current_genes = list(map(str, adata.var_names.tolist()))
-    gene_mapping = build_gene_mapping_with_local_cache(
-        gene_names=current_genes,
-        species=species,
-        cache_csv=cache_csv,
-    )
-    new_genes = [gene_mapping.get(gene, gene) for gene in current_genes]
-    adata.var_names = new_genes
-    if adata.var_names.duplicated().any():
-        adata.var_names_make_unique()
-    mapped_count = sum(1 for gene in current_genes if gene in gene_mapping)
-    LOGGER.info(
-        "Applied cached gene mapping: mapped=%s retained_original=%s cache=%s",
-        mapped_count,
-        len(current_genes) - mapped_count,
-        cache_csv,
-    )
+    map_mouse_symbols_to_ensembl(adata, mapping_csv)
     return adata
 
 
 def preconvert_dataset_gene_ids(
     datasets: dict[str, sc.AnnData],
-    cache_csv: Path,
+    mapping_csv: Path = GENE_MAPPING_FILE,
 ) -> dict[str, sc.AnnData]:
     converted: dict[str, sc.AnnData] = {}
     for dataset_name, adata in datasets.items():
-        LOGGER.info("Pre-converting gene IDs to Ensembl for dataset: %s", dataset_name)
-        converted[dataset_name] = ensure_ensembl_ids_with_local_cache(
-            adata=adata,
-            species="mouse",
-            cache_csv=cache_csv,
-        )
+        LOGGER.info("Pre-converting gene IDs using the local reference: %s", dataset_name)
+        converted[dataset_name] = ensure_ensembl_ids_with_local_mapping(adata, mapping_csv)
     return converted
+
+
+def run_tidyi_analysis(
+    adata: sc.AnnData,
+    sample_col: str,
+    celltype_col: str,
+    species: str = "mouse",
+    raw_layer: str = "raw",
+) -> pd.DataFrame:
+    """Retain the original TIDYI grouping/rates, with shared offline mapping."""
+    from tidyi import tidyi_main_mouse
+
+    require_columns(adata.obs, [sample_col, celltype_col], "TIDYI input obs")
+    if raw_layer not in adata.layers:
+        raise KeyError(f"Missing raw layer '{raw_layer}' required for TIDYI analysis.")
+
+    adata = adata.copy()
+    adata.obs[SP_CT_COL] = adata.obs[sample_col].astype(str) + "_" + adata.obs[celltype_col].astype(str)
+    if species != "mouse":
+        raise ValueError("This handover reference supports mouse genes only.")
+    map_mouse_symbols_to_ensembl(adata)
+    adata.layers["counts"] = adata.layers[raw_layer].copy()
+
+    # TIDYI internally subsets AnnData objects and then writes into .X/.var.
+    # Those operations are safe for this workflow but create noisy view warnings in logs.
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=ImplicitModificationWarning)
+        warnings.filterwarnings("ignore", category=UserWarning, message="Received a view of an AnnData.*")
+        tidy_model = tidyi_main_mouse.tidy_rates_mouse(gene_list=adata.var_names.tolist())
+        tidy_model.train_classifier()
+
+    results: list[dict[str, Any]] = []
+    for sample_celltype in adata.obs[SP_CT_COL].astype(str).unique():
+        sub_data = adata[adata.obs[SP_CT_COL].astype(str) == sample_celltype].copy()
+        with warnings.catch_warnings():
+            warnings.filterwarnings("ignore", category=ImplicitModificationWarning)
+            warnings.filterwarnings("ignore", category=UserWarning, message="Received a view of an AnnData.*")
+            prolif_rate, death_rate, _, _ = tidy_model.apply_classifier(sub_data)
+        sample_name, celltype = sample_celltype.rsplit("_", 1)
+        results.append(
+            {
+                "sample": sample_name,
+                "celltype": celltype,
+                "prolif_rate": float(prolif_rate),
+                "death_rate": float(death_rate),
+            }
+        )
+
+    return pd.DataFrame(results)
 
 
 def validate_group_filters(adata: sc.AnnData, group: ComparisonGroup, comparison_name: str) -> None:
@@ -692,27 +607,13 @@ def run_single_comparison(
     celltype_col: str,
     output_root: Path,
     raw_layer: str,
-    smoke_test: bool,
-) -> pd.DataFrame | None:
+) -> pd.DataFrame:
     subset = build_comparison_subset(adata, comparison, celltype_col)
     subset = add_percentage(subset, celltype_col)
     if subset.n_obs == 0:
         raise ValueError(f"{comparison.name} produced an empty subset")
 
     comparison_dirs = make_comparison_output_dirs(output_root, comparison.name)
-    if smoke_test:
-        summary = (
-            subset.obs.groupby([COMPARISON_GROUP_COL, "tissue", celltype_col], observed=True)
-            .size()
-            .rename("n_cells")
-            .reset_index()
-            .sort_values([COMPARISON_GROUP_COL, "tissue", celltype_col])
-        )
-        summary_path = comparison_dirs["comparison_dir"] / f"{comparison.name}_smoke_summary.csv"
-        summary.to_csv(summary_path, index=False)
-        LOGGER.info("Smoke-test summary saved: %s", summary_path)
-        return None
-
     tidyi_df = run_tidyi_analysis(
         adata=subset,
         sample_col=ANALYSIS_TISSUE_COL,
@@ -738,14 +639,14 @@ def main() -> None:
     setup_logging(args.log_level)
 
     selected_comparisons = get_selected_comparisons(args.comparisons)
+    load_mouse_gene_mapping()
     ensure_output_dir(args.output_root)
 
     datasets = {
         "mukin": prepare_mukin_dataset(args.mukin_bm_root, args.mukin_skin_root),
         "tms": prepare_tms_dataset(args.tms_bm_root),
     }
-    if not args.smoke_test:
-        datasets = preconvert_dataset_gene_ids(datasets, cache_csv=args.gene_cache_csv)
+    datasets = preconvert_dataset_gene_ids(datasets)
     celltype_columns = {
         "mukin": "SingleR_CellType",
         "tms": "celltype_hb",
@@ -760,12 +661,10 @@ def main() -> None:
             celltype_col=celltype_columns[comparison.dataset],
             output_root=args.output_root,
             raw_layer=args.raw_layer,
-            smoke_test=args.smoke_test,
         )
-        if final_table is not None:
-            final_tables[comparison.name] = final_table
+        final_tables[comparison.name] = final_table
 
-    if not args.smoke_test and final_tables:
+    if final_tables:
         plot_final_results(final_tables, args.output_root)
 
 

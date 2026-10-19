@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
 """Master entry point for Objective 3: death-proliferation dominance.
 
-This master contains only the minimum computation needed to reproduce the six
-confirmed regulation-magnitude-filter outputs. Scatter plots, effect-size plots,
+By default, this master first rebuilds the five required TIDYI rate CSVs from
+the Mukin and TMS single-cell inputs, then reproduces the six confirmed
+regulation-magnitude-filter outputs. Scatter plots, effect-size plots,
 growth-noise filtering, and the older decomposition figures are out of scope.
 
-Legacy run:
+Complete run using TIDYI from the active environment:
 
     python master_death_proliferation_dominance.py
 
-Run with rate CSVs produced by a colleague's replacement TIDYI:
+Complete run using a colleague's replacement TIDYI checkout:
 
     python master_death_proliferation_dominance.py \
-        --tidyi-input-root /path/to/new/ty_df \
+        --tidyi-source-root /path/containing/the/tidyi/package \
         --tidyi-version-label <version-or-commit> \
         --tidyi-model-label <model-name> \
         --tidyi-formula-label <formula-name>
+
+Fast compatibility run using existing rate CSVs:
+
+    python master_death_proliferation_dominance.py \
+        --use-precomputed-rates \
+        --tidyi-input-root /path/to/ty_df
 
 Legacy rate producer and annotation lineage:
 - Producer: thesis_project/TIDYI/TIDYI_pattern/ty_pipeline_scripts/
@@ -31,7 +38,9 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
+import subprocess
 import sys
 
 import matplotlib
@@ -52,14 +61,26 @@ if str(RA_ROOT) not in sys.path:
 
 from handover_utils import (  # noqa: E402
     TIDYI_RATE_COLUMNS,
+    configure_tidyi_source,
     file_record,
     require_paths,
     snapshot_outputs,
     validate_refreshed_outputs,
 )
+from gene_mapping import GENE_MAPPING_FILE  # noqa: E402
 
 
 LEGACY_TIDYI_INPUT_ROOT = RA_ROOT / "inputs/tidyi_refine"
+RATE_PRODUCER = Path(__file__).parent / "support/tidyi_comparison_analysis.py"
+RATE_GENERATION_INPUT_DIR = Path(__file__).parent / "rate_generation_inputs"
+MUKIN_STATS_PATH = RATE_GENERATION_INPUT_DIR / "mukin_sample_stas.csv"
+TMS_STATS_PATH = RATE_GENERATION_INPUT_DIR / "tms_sample_stas.csv"
+DEFAULT_MUKIN_H5AD = Path(
+    "/scratch/chenxi.sun/thesis_project/mukin_qcdata/mukin_data_tissuewise_knn.h5ad"
+)
+DEFAULT_TMS_H5AD = Path(
+    "/scratch/chenxi.sun/thesis_project/tms_qcdata/tms_10x_tissuewise_knn.h5ad"
+)
 TYPICAL_CV_PATH = (
     RA_ROOT / "inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv"
 )
@@ -68,6 +89,7 @@ REFERENCE_CV_DETAIL_PATH = (
     / "inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv"
 )
 OUTPUT_DIR = Path(__file__).parent / "outputs"
+RATE_GENERATION_OUTPUT_DIR = OUTPUT_DIR / "rate_generation"
 REGULATION_MAGNITUDE_THRESHOLD = 2 * np.log(2) / (24 * 3)
 
 RATE_FILENAMES = (
@@ -166,15 +188,92 @@ EXPECTED_OUTPUTS = tuple(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--use-precomputed-rates",
+        action="store_true",
+        help=(
+            "Skip single-cell rate generation and read the five rate CSVs from "
+            "--tidyi-input-root. Intended for compatibility checks only."
+        ),
+    )
+    parser.add_argument(
         "--tidyi-input-root",
         type=Path,
         default=LEGACY_TIDYI_INPUT_ROOT,
-        help="Directory containing the five required TIDYI rate CSVs.",
+        help="Rate CSV directory used only with --use-precomputed-rates.",
     )
-    parser.add_argument("--tidyi-version-label", default="legacy-rate-files")
+    parser.add_argument(
+        "--tidyi-source-root",
+        type=Path,
+        default=None,
+        help="Optional directory containing the replacement tidyi package.",
+    )
+    parser.add_argument(
+        "--mukin-h5ad",
+        type=Path,
+        default=DEFAULT_MUKIN_H5AD,
+        help="Mukin tissuewise single-cell input used to generate rate CSVs.",
+    )
+    parser.add_argument(
+        "--tms-h5ad",
+        type=Path,
+        default=DEFAULT_TMS_H5AD,
+        help="TMS tissuewise single-cell input used to generate rate CSVs.",
+    )
+    parser.add_argument("--tidyi-version-label", default="legacy-environment")
     parser.add_argument("--tidyi-model-label", default="legacy-model")
     parser.add_argument("--tidyi-formula-label", default="legacy-formula")
     return parser.parse_args()
+
+
+def generate_rate_tables(
+    mukin_h5ad: Path,
+    tms_h5ad: Path,
+    tidyi_source_root: Path | None,
+) -> tuple[Path, tuple[Path, ...], list[dict[str, object]]]:
+    inputs = (
+        mukin_h5ad,
+        tms_h5ad,
+        MUKIN_STATS_PATH,
+        TMS_STATS_PATH,
+        GENE_MAPPING_FILE,
+        RATE_PRODUCER,
+    )
+    require_paths(inputs)
+    configure_tidyi_source(tidyi_source_root)
+
+    rate_root = RATE_GENERATION_OUTPUT_DIR / "ty_df"
+    rate_paths = tuple(rate_root / filename for filename in RATE_FILENAMES)
+    before = snapshot_outputs(rate_paths)
+    command = [
+        sys.executable,
+        str(RATE_PRODUCER),
+        "--mukin-h5ad",
+        str(mukin_h5ad),
+        "--tms-h5ad",
+        str(tms_h5ad),
+        "--mukin-stats-csv",
+        str(MUKIN_STATS_PATH),
+        "--tms-stats-csv",
+        str(TMS_STATS_PATH),
+        "--output-dir",
+        str(RATE_GENERATION_OUTPUT_DIR),
+        "--comparisons",
+        *(Path(filename).stem.removesuffix("_tidyi") for filename in RATE_FILENAMES),
+        "--raw-layer",
+        "raw",
+        "--species",
+        "mouse",
+        "--entropy-threshold",
+        "0.3",
+        "--knn-neighbors",
+        "10",
+        "--n-pca",
+        "30",
+    ]
+    environment = os.environ.copy()
+    environment["MPLCONFIGDIR"] = str(OUTPUT_DIR / ".matplotlib")
+    subprocess.run(command, check=True, env=environment)
+    return rate_root, rate_paths, validate_refreshed_outputs(rate_paths, before)
 
 
 def load_rate_tables(input_root: Path) -> tuple[dict[str, pd.DataFrame], tuple[Path, ...]]:
@@ -486,14 +585,36 @@ def save_magnitude_outputs(table: pd.DataFrame, atlas: str) -> None:
 
 def main() -> None:
     args = parse_args()
-    input_root = args.tidyi_input_root.expanduser().resolve()
-    tables, rate_paths = load_rate_tables(input_root)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    started = datetime.now(timezone.utc)
+
+    generated_rate_records: list[dict[str, object]] = []
+    single_cell_inputs: list[dict[str, object]] = []
+    if args.use_precomputed_rates:
+        input_root = args.tidyi_input_root.expanduser().resolve()
+        rate_source_mode = "precomputed_compatibility"
+    else:
+        mukin_h5ad = args.mukin_h5ad.expanduser().resolve()
+        tms_h5ad = args.tms_h5ad.expanduser().resolve()
+        input_root, rate_paths, generated_rate_records = generate_rate_tables(
+            mukin_h5ad=mukin_h5ad,
+            tms_h5ad=tms_h5ad,
+            tidyi_source_root=args.tidyi_source_root,
+        )
+        single_cell_inputs = [
+            file_record(mukin_h5ad),
+            file_record(tms_h5ad),
+            file_record(MUKIN_STATS_PATH),
+            file_record(TMS_STATS_PATH),
+            file_record(GENE_MAPPING_FILE),
+        ]
+        rate_source_mode = "generated_from_single_cell"
+
+    tables, rate_paths = load_rate_tables(input_root)
     pre_run_output_records = [
         file_record(path) for path in EXPECTED_OUTPUTS if path.exists()
     ]
     before = snapshot_outputs(EXPECTED_OUTPUTS)
-    started = datetime.now(timezone.utc)
 
     paired_rates = build_paired_rates(tables)
     method3 = calculate_method3(paired_rates)
@@ -506,11 +627,36 @@ def main() -> None:
         "status": "completed",
         "started_utc": started.isoformat(),
         "finished_utc": datetime.now(timezone.utc).isoformat(),
+        "rate_source_mode": rate_source_mode,
         "tidyi_input_root": str(input_root),
+        "tidyi_source_root": (
+            str(args.tidyi_source_root.expanduser().resolve())
+            if args.tidyi_source_root
+            else None
+        ),
         "tidyi_version_label": args.tidyi_version_label,
         "tidyi_model_label": args.tidyi_model_label,
         "tidyi_formula_label": args.tidyi_formula_label,
         "rate_inputs": [file_record(path) for path in rate_paths],
+        "generated_rate_outputs": generated_rate_records,
+        "single_cell_inputs": single_cell_inputs,
+        "rate_producer": file_record(RATE_PRODUCER),
+        "rate_generation_configuration": {
+            "base_annotation_column": "tissue_wise_knn",
+            "analysis_annotation_column": "analysis_celltype",
+            "rate_celltype_column": "analysis_celltype",
+            "cross_tissue_aggregation": "not_used_for_objective_3_rates",
+            "mukin_entropy_threshold": 0.3,
+            "mukin_knn_neighbors": 10,
+            "mukin_pca_dimensions": 30,
+            "minimum_cells_per_comparison_group_tissue_celltype": 80,
+            "raw_count_layer": "raw",
+            "species": "mouse",
+            "percentage_denominator": (
+                "cells within each pooled comparison-group and tissue before "
+                "the per-group minimum-cell filter"
+            ),
+        },
         "typical_cv_input": file_record(TYPICAL_CV_PATH),
         "reference_cv_input": file_record(REFERENCE_CV_DETAIL_PATH),
         "legacy_rate_producer": (

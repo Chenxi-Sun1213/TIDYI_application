@@ -1,51 +1,34 @@
-# Frozen mouse gene mapping
+# Frozen replay3 mouse gene mapping
 
-All handover analyses that translate mouse gene symbols read
+Except for Objective 2, formal mouse symbol-to-Ensembl conversion reads
 `mouse_symbol_to_ensembl.csv` through the shared `gene_mapping.py` module.
-Analysis runs do not query a service, update a cache, or download annotations.
+The file is an exact frozen copy of the archived MyGene cache at
+`/scratch/chenxi.sun/.tidyi_gene_cache/mouse_symbol_to_ensembl.csv`.
+It uses the original columns `symbol` and `ensembl_gene_clean`.
 
-The reference contains 41,870 symbols: 39,948 have a resolved mouse Ensembl ID,
-1,884 have no valid candidate, and 38 remain ambiguous. The columns are
-`symbol`, `ensembl_gene`, `status`, `sources`, and `candidate_ensembl_ids`.
-An empty `ensembl_gene` means the symbol must not be translated automatically.
+The project owner selected the replay3 policy on 2026-10-06:
 
-The project owner confirmed this resolution policy on 2026-10-03:
+- Use the archived cache alone, without AER/BioMart supplementation or online queries.
+- Translate symbols with a valid mouse Ensembl ID; retain unresolved symbols.
+- Preserve existing valid input Ensembl IDs and retain all expression features.
+- Make duplicate mapped names unique; do not merge their expression counts.
 
-1. Keep a unique valid result from the archived TIDYI mouse mapping cache.
-2. For other symbols, supplement from the AER original 10x feature metadata and
-   the retained BioMart human–mouse orthologue export. Resolve only when the
-   local sources provide exactly one distinct valid mouse ID.
-3. Preserve existing input Ensembl IDs. Do not replace them using symbol lookup.
-4. Leave unresolved symbols unchanged in Objectives 1 and 6. Objective 2 keeps
-   its existing mapped-gene filtering step; AER keeps only valid mouse IDs and
-   preserves its uniqueness and coverage checks.
+The file contains 29,857 unique symbols: 25,428 valid mouse mappings,
+4,428 empty entries, and one non-Ensembl value (`Scaper -> 244891`).
+The loader ignores that invalid value, retaining `Scaper` as its original symbol,
+matching replay3. The source annotation release was not recorded.
+`mapping_provenance.json` records the source and file checksum.
 
-There are 162 symbols with multiple candidate IDs across sources. The 124 with
-a unique legacy-cache result retain that result; the remaining 38 are left
-unresolved. Candidate IDs are retained in the CSV for inspection. The legacy
-`Scaper` entry contained the Entrez ID `244891`; that invalid Ensembl value was
-excluded and replaced by the unambiguous local Ensembl candidate.
+Objective 1, the AER preparation in Objective 5, and the Objective 6 support
+pipeline share this file. AER retains existing valid original Ensembl IDs and
+uses the cache only where an ID is absent. Objectives 3 and 6 consume saved rate
+tables in their normal master runs; this mapping update does not regenerate those
+inputs. Arigoni human genes retain their original IDs.
 
-The source annotation release was not recorded in the supplied files. This is
-a frozen reference assembled from existing local sources, not a claim about
-the latest Ensembl release. `mapping_provenance.json` records source paths and
-SHA-256 checksums. Running an analysis requires only the frozen CSV, not the
-original files used to build it. `build_reference.py` is an optional rebuild
-script and is never called by a master.
+Objective 2 was restored on 2026-10-12 to
+`inputs/classifier_data/mart_export_gene_names.txt` and the historical rule
+that retains only genes present in that table before rate inference.
 
-`mapping_coverage.csv` records a metadata-only audit of all 37 ASTRID H5AD
-inputs, before downstream filtering: Mukin BM 98.49%, Mukin skin 98.12%, and
-TMS BM 93.74% of feature names resolve. These percentages describe gene-name
-coverage, not cell retention or classifier marker coverage.
-
-Objective 2 previously used only the BioMart orthologue subset. The unified
-reference can retain additional genes or choose different IDs, so rerun rate
-values may differ. Saved notebook outputs and `reference_outputs/` remain
-historical results and have not been regenerated.
-
-Offline regression checks, without fitting TIDYI or running the six analyses:
-
-```bash
-cd /scratch/chenxi.sun/RA_project_handover
-PYTHONDONTWRITEBYTECODE=1 python -m unittest discover -s tests -v
-```
+`build_reference.py` copies the archived cache and rebuilds its provenance. It is
+an optional maintenance utility, never called automatically by a master.
+Historical `reference_outputs/` retain their original gene-mapping results.

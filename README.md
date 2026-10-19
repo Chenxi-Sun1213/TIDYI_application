@@ -11,8 +11,15 @@ source material and is not required as the output destination of these masters.
 - The two AER H5AD inputs were copied to
   `/srv/mfs/hausserlab/data/AER2025_Juliane/` and verified by SHA-256.
 - Mukin and TMS H5AD inputs remain in their existing `thesis_project` paths.
-- The masters have received static validation only. They have **not** been run
-  from this handover directory.
+- Objective 3 now regenerates its five rate CSVs from those H5ADs by default;
+  its bundled legacy CSVs are retained only for explicit compatibility runs.
+- Except for Objective 2, mouse gene-name mapping uses the shared frozen file
+  `inputs/gene_mapping/mouse_symbol_to_ensembl.csv`; analysis code has no online
+  mapping fallback. Its policy and source checksums are documented beside it.
+- The 2026-10-06 mapping policy uses the replay3 archived MyGene cache alone,
+  retaining unresolved genes without AER/BioMart supplementation.
+- Objective 2 was restored on 2026-10-12 to the legacy local mart mapping and
+  retains only genes covered by that table.
 
 Read `RA_PROJECT_HANDOVER_GUIDE.md` before running anything.
 
@@ -42,8 +49,7 @@ reference_outputs/   # pre-handover results for comparison; never overwritten
 
 ## Manual run order
 
-Run one objective at a time and inspect its manifest and figures before moving
-to the next objective:
+Run one objective at a time:
 
 ```bash
 python "/scratch/chenxi.sun/RA_project_handover/01_rate_reproducibility/master_rate_reproducibility.py"
@@ -54,5 +60,6 @@ python "/scratch/chenxi.sun/RA_project_handover/05_aer_developmental/master_aer_
 python "/scratch/chenxi.sun/RA_project_handover/06_systems_biology/master_systems_biology_model_fitting.py"
 ```
 
-Do not delete the original project or source H5AD files until all six manual
-runs and scientific/visual comparisons have passed.
+Objective 3 is now a full single-cell-to-rate-to-dominance run. Use
+`--use-precomputed-rates` to run the downstream analysis with an existing
+five-table rate set.

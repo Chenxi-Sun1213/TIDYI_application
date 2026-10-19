@@ -1,4 +1,4 @@
-"""Read the frozen local mouse symbol-to-Ensembl reference; never query a service."""
+"""Apply the frozen replay3 mouse cache without supplementation or networking."""
 
 from __future__ import annotations
 
@@ -17,22 +17,20 @@ MOUSE_ENSEMBL_PATTERN = re.compile(r"^ENSMUSG\d+(?:\.\d+)?$")
 
 @lru_cache(maxsize=None)
 def load_mouse_gene_mapping(mapping_path: Path = GENE_MAPPING_FILE) -> dict[str, str]:
-    """Load resolved symbols only; unresolved/ambiguous rows have an empty ID."""
+    """Read valid mouse IDs; empty or non-Ensembl archived values stay unresolved."""
     mapping: dict[str, str] = {}
     seen: set[str] = set()
     with Path(mapping_path).open(newline="") as handle:
         reader = csv.DictReader(handle)
-        if not {"symbol", "ensembl_gene"}.issubset(reader.fieldnames or []):
-            raise ValueError(f"Missing symbol/ensembl_gene columns: {mapping_path}")
+        if not {"symbol", "ensembl_gene_clean"}.issubset(reader.fieldnames or []):
+            raise ValueError(f"Missing symbol/ensembl_gene_clean columns: {mapping_path}")
         for row in reader:
             symbol = row["symbol"].strip()
-            gene_id = row["ensembl_gene"].strip()
+            gene_id = row["ensembl_gene_clean"].strip()
             if not symbol or symbol in seen:
                 raise ValueError(f"Empty or duplicate symbol in {mapping_path}: {symbol!r}")
             seen.add(symbol)
-            if gene_id:
-                if not MOUSE_ENSEMBL_PATTERN.fullmatch(gene_id):
-                    raise ValueError(f"Invalid mouse Ensembl ID: {gene_id!r}")
+            if MOUSE_ENSEMBL_PATTERN.fullmatch(gene_id):
                 mapping[symbol] = gene_id.split(".")[0]
     return mapping
 

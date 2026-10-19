@@ -57,7 +57,7 @@ TIDYI_RESULTS = OUTPUT_DIR / "tidyi_result_df.csv"
 TIDYI_RUNTIME_PROVENANCE = OUTPUT_DIR / "tidyi_runtime_provenance.json"
 
 # Explicitly resolves the notebook's former hidden execution order.
-SELECTED_CELLS = (2, 4, 5, 8, 11, 12, 14, 17, 18, 19, 20, 21)
+SELECTED_CELLS = (2, 4, 5, 8, 11, 12, 14, 17, 18, 19, 20)
 
 EXPECTED_OUTPUT_NAMES = (
     "mukin_bm_age_19m_sex_F_microbiota_SPF_tissue_BM_SPF_19m_2_vs_SPF_19m_1.png",
@@ -76,8 +76,6 @@ EXPECTED_OUTPUT_NAMES = (
     "pairwise_rate_comparisons.csv",
     "pairwise_rate_pearson_correlations.csv",
     "rate_reproducibility_connected_dot_plot.pdf",
-    "rate_reproducibility_permutation_null_grid.pdf",
-    "mukin_sk_keratinocyte_spf_gf_death_vs_prolif_scatter.pdf",
     "tidyi_runtime_provenance.json",
 )
 EXPECTED_OUTPUTS = (TIDYI_RESULTS, *[OUTPUT_DIR / name for name in EXPECTED_OUTPUT_NAMES])
@@ -119,10 +117,6 @@ def main() -> None:
         18: (SourceReplacement(old_tidyi_results, str(TIDYI_RESULTS)),),
         19: (SourceReplacement(old_output_root, new_output_root),),
         20: (SourceReplacement(old_output_root, new_output_root),),
-        21: (
-            SourceReplacement(old_output_root, new_output_root),
-            SourceReplacement(old_tidyi_results, str(TIDYI_RESULTS)),
-        ),
     }
 
     run_notebook_master(

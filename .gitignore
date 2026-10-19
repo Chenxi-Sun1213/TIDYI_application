@@ -15,9 +15,9 @@ venv/
 *.bak
 *~
 
-# Generated analysis outputs; reviewed baselines live in reference_outputs/
-**/outputs/*
-!**/outputs/.gitkeep
+# Local analysis outputs and reference results
+**/outputs/
+**/reference_outputs/
 
 # Large single-cell data remain in their documented authoritative locations
 *.h5ad

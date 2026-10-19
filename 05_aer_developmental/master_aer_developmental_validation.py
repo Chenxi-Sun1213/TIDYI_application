@@ -23,15 +23,15 @@ External inputs and producers:
 - /srv/mfs/hausserlab/data/AER2025_Juliane/aer_post_entropy.h5ad
   Produced by: AER_DISTILL_analysis.ipynb after QC, ASTRID manual mapping,
   per-sample kNN transfer, and entropy filtering.
-- TIDYI_statistics typical/reference CV tables
+- TIDYI_statistics typical CV table
   Produced by: the TIDYI statistics workflow; used for Method 3.
 - inputs/distill_celltype_percentages_by_sample.tsv
   Produced by: the AER final-export/composition stage; used by the publication
   figure script.
 
-Formal outputs are limited to local output sections 03, 05, all eight retained
-files in 07 (four primary plus four reference-sensitivity files), and
-pub_ready_fig. Upstream QC and annotation checkpoints are not regenerated.
+Formal outputs are limited to local output sections 03, 05, the four AER-global-
+mean Method 3 files in 07, and pub_ready_fig. Upstream QC and annotation
+checkpoints are not regenerated.
 """
 
 from __future__ import annotations
@@ -51,6 +51,7 @@ from handover_utils import (  # noqa: E402
     run_notebook_master,
     tidyi_runtime_capture_cell,
 )
+from gene_mapping import GENE_MAPPING_FILE  # noqa: E402
 
 
 PROJECT_ROOT = Path(__file__).parent
@@ -62,13 +63,6 @@ RAW_RECONSTRUCTION = AER_DATA_ROOT / "aer_six_samples_raw_counts.h5ad"
 POST_ENTROPY_H5AD = AER_DATA_ROOT / "aer_post_entropy.h5ad"
 COMPOSITION_TABLE = INPUT_ROOT / "distill_celltype_percentages_by_sample.tsv"
 TYPICAL_CV = RA_ROOT / "inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv"
-REFERENCE_CV = (
-    RA_ROOT
-    / "inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv"
-)
-SENSITIVITY_SCRIPT = Path(__file__).with_name(
-    "aer_method3_reference_sensitivity.py"
-)
 TIDYI_RUNTIME_PROVENANCE = OUTPUT_ROOT / "05_tidyi/tidyi_runtime_provenance.json"
 
 # The retained post-entropy checkpoint makes upstream QC/ASTRID/kNN cells
@@ -94,13 +88,6 @@ EXPECTED_OUTPUTS = (
     / "07_growth_rate_decomposition/aer_method3_aer_global_mean_magnitude_filtered_heatmap.png",
     OUTPUT_ROOT
     / "07_growth_rate_decomposition/aer_method3_aer_global_mean_magnitude_filter_histogram_5bins.png",
-    OUTPUT_ROOT
-    / "07_growth_rate_decomposition/aer_method3_regulation_magnitude_filter.csv",
-    OUTPUT_ROOT / "07_growth_rate_decomposition/aer_method3_unfiltered_heatmap.png",
-    OUTPUT_ROOT
-    / "07_growth_rate_decomposition/aer_method3_magnitude_filtered_heatmap.png",
-    OUTPUT_ROOT
-    / "07_growth_rate_decomposition/aer_method3_magnitude_filter_histogram_5bins.png",
     OUTPUT_ROOT / "pub_ready_fig/aer_tidyi_rates_pub_ready.pdf",
     OUTPUT_ROOT / "pub_ready_fig/aer_tidyi_rates_pub_ready.svg",
     OUTPUT_ROOT / "pub_ready_fig/celltype_composition_pub_ready.pdf",
@@ -189,10 +176,6 @@ def main() -> None:
                 'METHOD3_TYPICAL_CV_PATH = Path(\n    "/scratch/chenxi.sun/TIDYI_statistics/results/aging_paired_ttest/"\n    "effect_size_typical_cv/stats_notebook_aging_typical_cv_values.csv"\n)',
                 f'METHOD3_TYPICAL_CV_PATH = Path({str(TYPICAL_CV)!r})',
             ),
-            SourceReplacement(
-                'METHOD3_REFERENCE_CV_DETAIL_PATH = Path(\n    "/scratch/chenxi.sun/TIDYI_statistics/results/ref_cv/"\n    "stats_notebook_ref_cv_separate_by_dataset_celltype.csv"\n)',
-                f'METHOD3_REFERENCE_CV_DETAIL_PATH = Path({str(REFERENCE_CV)!r})',
-            ),
         ),
     }
     run_notebook_master(
@@ -203,29 +186,17 @@ def main() -> None:
         authoritative_inputs=(
             RAW_RECONSTRUCTION,
             POST_ENTROPY_H5AD,
+            GENE_MAPPING_FILE,
             COMPOSITION_TABLE,
             TYPICAL_CV,
-            REFERENCE_CV,
             PROJECT_ROOT / "aer_distill_helpers.py",
             PROJECT_ROOT / "make_pub_ready_figures.py",
-            SENSITIVITY_SCRIPT,
         ),
         manifest_path=OUTPUT_ROOT / "master_aer_developmental_validation_run_manifest.json",
         kernel_name=args.kernel_name,
         source_replacements=replacements,
         append_cells=(tidyi_runtime_capture_cell(TIDYI_RUNTIME_PROVENANCE),),
         post_commands=(
-            (
-                args.postprocess_python,
-                str(SENSITIVITY_SCRIPT),
-                "--primary-table",
-                str(
-                    OUTPUT_ROOT
-                    / "07_growth_rate_decomposition/aer_method3_aer_global_mean_regulation_magnitude_filter.csv"
-                ),
-                "--output-dir",
-                str(OUTPUT_ROOT / "07_growth_rate_decomposition"),
-            ),
             (args.postprocess_python, str(PROJECT_ROOT / "make_pub_ready_figures.py")),
         ),
         run_metadata={
@@ -235,6 +206,8 @@ def main() -> None:
             "tidyi_version_label": args.tidyi_version_label,
             "tidyi_model_label": args.tidyi_model_label,
             "tidyi_formula_label": args.tidyi_formula_label,
+            "gene_mapping_file": str(GENE_MAPPING_FILE),
+            "gene_mapping_policy": "Retain original ENSMUSG IDs; local lookup only for missing/invalid IDs.",
             "post_entropy_annotation_column": "cell_type",
             "manual_astrid_annotation_column": "astrid_reannotation",
             "entropy_threshold": 0.3,
@@ -242,7 +215,7 @@ def main() -> None:
             "formal_output_sections": [
                 "03_biolucid",
                 "05_tidyi",
-                "07_primary_and_reference_sensitivity",
+                "07_growth_rate_decomposition",
                 "pub_ready_fig",
             ],
         },
