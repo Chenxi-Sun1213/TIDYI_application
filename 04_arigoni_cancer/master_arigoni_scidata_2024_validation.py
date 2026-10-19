@@ -76,14 +76,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     configure_tidyi_source(args.tidyi_source_root)
-    save_main_figure = (
-        "fig.savefig(OUTPUT_DIR / 'arigoni_tidyi_rates_by_cell_line.png', "
-        "dpi=300, bbox_inches='tight')"
-    )
     replacements = {
         4: (
             SourceReplacement(
-                "/scratch/chenxi.sun/RA project/cancer pattern/output/Arigoni_Scidata_2024",
+                "/scratch/chenxi.sun/RA_project_handover/04_arigoni_cancer/reference_outputs",
                 str(OUTPUT_DIR),
             ),
         ),
@@ -98,7 +94,6 @@ def main() -> None:
         kernel_name=args.kernel_name,
         source_replacements=replacements,
         append_cells=(
-            save_main_figure,
             tidyi_runtime_capture_cell(TIDYI_RUNTIME_PROVENANCE),
         ),
         run_metadata={
