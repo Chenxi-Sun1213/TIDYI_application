@@ -19,11 +19,12 @@ The loader ignores that invalid value, retaining `Scaper` as its original symbol
 matching replay3. The source annotation release was not recorded.
 `mapping_provenance.json` records the source and file checksum.
 
-Objective 1, the AER preparation in Objective 5, and the Objective 6 support
-pipeline share this file. AER retains existing valid original Ensembl IDs and
-uses the cache only where an ID is absent. Objectives 3 and 6 consume saved rate
-tables in their normal master runs; this mapping update does not regenerate those
-inputs. Arigoni human genes retain their original IDs.
+Objective 1, Objective 3 rate and reference-CV generation, AER preparation in
+Objective 5, and the Objective 6 support pipeline share this file. AER retains
+existing valid original Ensembl IDs and uses the cache only where an ID is
+absent. Objective 3 regenerates rates and reference CVs by default; its explicit
+precomputed mode and Objective 6 consume saved rate tables. Arigoni human genes
+retain their original IDs.
 
 Objective 2 was restored on 2026-10-12 to
 `inputs/classifier_data/mart_export_gene_names.txt` and the historical rule

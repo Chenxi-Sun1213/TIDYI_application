@@ -84,16 +84,15 @@ DEFAULT_TMS_H5AD = Path(
 )
 DEFAULT_MUKIN_REFERENCE_H5AD = DEFAULT_MUKIN_H5AD.with_name("mukin_data.h5ad")
 DEFAULT_TMS_REFERENCE_H5AD = DEFAULT_TMS_H5AD.with_name("tms_10x.h5ad")
-TYPICAL_CV_PATH = (
-    RA_ROOT / "inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv"
-)
-REFERENCE_CV_DETAIL_PATH = (
-    RA_ROOT
-    / "inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv"
-)
 OUTPUT_DIR = Path(__file__).parent / "outputs"
 RATE_GENERATION_OUTPUT_DIR = OUTPUT_DIR / "rate_generation"
 REFERENCE_CV_OUTPUT_DIR = OUTPUT_DIR / "reference_cv"
+TYPICAL_CV_PATH = (
+    REFERENCE_CV_OUTPUT_DIR / "stats_notebook_aging_typical_cv_values.csv"
+)
+REFERENCE_CV_DETAIL_PATH = (
+    REFERENCE_CV_OUTPUT_DIR / "stats_notebook_ref_cv_separate_by_dataset_celltype.csv"
+)
 REGULATION_MAGNITUDE_THRESHOLD = 2 * np.log(2) / (24 * 3)
 
 RATE_FILENAMES = (
@@ -239,7 +238,7 @@ def parse_args() -> argparse.Namespace:
         "--reference-cv-root", type=Path, default=None,
         help=(
             "Precomputed reference CV directory, only with --use-precomputed-rates. "
-            "Defaults to the bundled legacy inputs/tidyi_statistics tables."
+            "Defaults to this objective's outputs/reference_cv tables."
         ),
     )
     args = parser.parse_args()
@@ -657,7 +656,7 @@ def main() -> None:
         rate_source_mode = "precomputed_compatibility"
         cv_root = (
             args.reference_cv_root.expanduser().resolve()
-            if args.reference_cv_root is not None else TYPICAL_CV_PATH.parent
+            if args.reference_cv_root is not None else REFERENCE_CV_OUTPUT_DIR
         )
         typical_cv_path = cv_root / TYPICAL_CV_PATH.name
         reference_cv_detail_path = cv_root / REFERENCE_CV_DETAIL_PATH.name

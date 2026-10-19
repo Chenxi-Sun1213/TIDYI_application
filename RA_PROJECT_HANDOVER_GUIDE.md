@@ -67,9 +67,13 @@ objects for mouse-level abundance.
 
 ### 3.3 Lightweight inputs copied into the handover
 
-`inputs/` contains the five legacy TIDYI rate tables retained as an
-Objective 3 compatibility fallback and as Objective 6 inputs, the two Method 3
-CV tables retained for compatibility, and the classifier gene-name map. Objective 3 also contains its historical rate producer, adapted to the shared
+`inputs/` contains two distinct five-table TIDYI rate sets:
+[author-annotation-based rates](inputs/tidyi_refine/README.md) for Objective 3
+compatibility runs and [ASTRID-annotation-based pooled rates](inputs/tidyi_astrid_anno/README.md)
+for Objective 6. It also contains the shared offline gene mapping and the
+Objective 2 classifier gene-name map. Reference CV tables are generated under
+`03_death_proliferation/outputs/reference_cv/`, rather than bundled in `inputs/`.
+Objective 3 also contains its historical rate producer, adapted to the shared
 frozen offline gene mapping, plus exact copies of the two small sample-statistics
 tables; the large Mukin/TMS H5ADs remain at their authoritative paths.
 
@@ -142,9 +146,11 @@ under `03_death_proliferation/outputs/rate_generation/ty_df/` and recomputes its
 reference CV tables under `03_death_proliferation/outputs/reference_cv/` before
 running the dominance analysis. Its explicit `--use-precomputed-rates`
 compatibility mode skips both producers and reads `--tidyi-input-root` plus
-`--reference-cv-root` (the latter defaults to the frozen legacy CV directory).
-Objective 6 continues to use copied
-rate tables with the same 13-column contract.
+`--reference-cv-root` (the latter defaults to its generated `outputs/reference_cv/`
+directory). Objective 5 reads the typical-CV table from the same Objective 3
+output directory, so run Objective 3 first or transfer those generated CV
+outputs with the project. Objective 6 continues to use copied rate tables with
+the same 13-column contract.
 
 ## 7. Known boundaries
 

@@ -23,8 +23,9 @@ External inputs and producers:
 - /srv/mfs/hausserlab/data/AER2025_Juliane/aer_post_entropy.h5ad
   Produced by: AER_DISTILL_analysis.ipynb after QC, ASTRID manual mapping,
   per-sample kNN transfer, and entropy filtering.
-- TIDYI_statistics typical CV table
-  Produced by: the TIDYI statistics workflow; used for Method 3.
+- 03_death_proliferation/outputs/reference_cv/stats_notebook_aging_typical_cv_values.csv
+  Produced by: the Objective 3 master; used for Method 3. Run Objective 3 first
+  or supply its generated reference-CV outputs when transferring the project.
 - inputs/distill_celltype_percentages_by_sample.tsv
   Produced by: the AER final-export/composition stage; used by the publication
   figure script.
@@ -64,7 +65,10 @@ INPUT_ROOT = PROJECT_ROOT / "inputs"
 RAW_RECONSTRUCTION = AER_DATA_ROOT / "aer_six_samples_raw_counts.h5ad"
 POST_ENTROPY_H5AD = AER_DATA_ROOT / "aer_post_entropy.h5ad"
 COMPOSITION_TABLE = INPUT_ROOT / "distill_celltype_percentages_by_sample.tsv"
-TYPICAL_CV = RA_ROOT / "inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv"
+TYPICAL_CV = (
+    RA_ROOT / "03_death_proliferation/outputs/reference_cv"
+    / "stats_notebook_aging_typical_cv_values.csv"
+)
 TIDYI_RUNTIME_PROVENANCE = OUTPUT_ROOT / "05_tidyi/tidyi_runtime_provenance.json"
 
 # The retained post-entropy checkpoint makes upstream QC/ASTRID/kNN cells
@@ -143,8 +147,9 @@ def main() -> None:
                 f'INPUT_H5AD = Path({str(RAW_RECONSTRUCTION)!r})',
             ),
             SourceReplacement(
-                'ASTRID_MARKER_FORMULA_SOURCE = Path(\n    "/scratch/chenxi.sun/thesis_project/ASTRID_pkg/astrid/data/"\n    "ExpectedCellTypesMarkersMouse.csv"\n)',
-                'ASTRID_MARKER_FORMULA_SOURCE = PROJECT_ROOT / "inputs" / "ExpectedCellTypesMarkersMouse.csv"',
+                'ASTRID_MARKER_FORMULA_SOURCE = Path(\n    "/scratch/chenxi.sun/thesis_project/ASTRID_pkg/astrid/data/"\n    "ExpectedCellTypesMarkersMouse.csv"\n)\n'
+                'ASTRID_MARKER_FORMULA = ensure_marker_formula_copy(\n    ASTRID_MARKER_FORMULA_SOURCE,\n    PROJECT_ROOT / "config" / "ExpectedCellTypesMarkersMouse_AER.csv",\n)',
+                'ASTRID_MARKER_FORMULA = PROJECT_ROOT / "config" / "ExpectedCellTypesMarkersMouse_AER.csv"',
             ),
             SourceReplacement(
                 'for required_path in [\n    INPUT_H5AD,\n    ASTRID_SCRIPT,\n    ASTRID_REFERENCE,\n    ASTRID_MARKER_FORMULA,\n]:',
@@ -216,6 +221,7 @@ def main() -> None:
             GENE_MAPPING_FILE,
             COMPOSITION_TABLE,
             TYPICAL_CV,
+            PROJECT_ROOT / "config/ExpectedCellTypesMarkersMouse_AER.csv",
             PROJECT_ROOT / "aer_distill_helpers.py",
             PROJECT_ROOT / "make_pub_ready_figures.py",
         ),

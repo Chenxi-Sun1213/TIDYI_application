@@ -42,5 +42,6 @@ The tissuewise H5ADs listed above separately supply `tissue_wise_knn` cell
 counts for the historical matching rule. Their count labels are not substituted
 for the reference rate labels. The two CV tables are regenerated under
 `outputs/reference_cv/` using the TIDYI selected by the master, together with
-sample rates, exclusions, and a manifest. Frozen CV tables under
-`inputs/tidyi_statistics/` remain for explicit precomputed compatibility runs.
+sample rates, exclusions, and a manifest. Precomputed compatibility runs reuse
+these generated CV tables by default; `--reference-cv-root` can select another
+saved CV directory. Objective 5 also reads the generated typical-CV table here.
