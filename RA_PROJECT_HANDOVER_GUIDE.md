@@ -58,7 +58,10 @@ documented Krt10/Krt15 rule. Objective 3 now regenerates its five pooled-conditi
 rate tables from the two tissuewise H5ADs, starting from `tissue_wise_knn`;
 Mukin then applies comparison-specific constrained kNN relabeling. Rates remain
 grouped by fine `analysis_celltype`; the later cross-tissue aggregation is not
-used for Objective 3. Objective 6
+used for Objective 3. Its reference CV producer separately infers sample-level
+rates from the original `mukin_data.h5ad` and `tms_10x.h5ad` annotations and uses
+the tissuewise H5ADs for cell-count matching. Both producers are called directly
+by the master; historical notebooks are not executed. Objective 6
 uses the same tissuewise H5ADs for tissuewise abundance and the ASTRID BM
 objects for mouse-level abundance.
 
@@ -66,7 +69,7 @@ objects for mouse-level abundance.
 
 `inputs/` contains the five legacy TIDYI rate tables retained as an
 Objective 3 compatibility fallback and as Objective 6 inputs, the two Method 3
-CV tables, and the classifier gene-name map. Objective 3 also contains its historical rate producer, adapted to the shared
+CV tables retained for compatibility, and the classifier gene-name map. Objective 3 also contains its historical rate producer, adapted to the shared
 frozen offline gene mapping, plus exact copies of the two small sample-statistics
 tables; the large Mukin/TMS H5ADs remain at their authoritative paths.
 
@@ -135,9 +138,12 @@ python "/scratch/chenxi.sun/RA_project_handover/06_systems_biology/master_system
 
 Objectives 1, 2, 3, 4, and 5 import TIDYI from the active environment unless
 `--tidyi-source-root` is provided. Objective 3 generates its five rate tables
-under `03_death_proliferation/outputs/rate_generation/ty_df/` before running
-the dominance analysis. Its explicit `--use-precomputed-rates` compatibility
-mode reads `--tidyi-input-root` instead. Objective 6 continues to use copied
+under `03_death_proliferation/outputs/rate_generation/ty_df/` and recomputes its
+reference CV tables under `03_death_proliferation/outputs/reference_cv/` before
+running the dominance analysis. Its explicit `--use-precomputed-rates`
+compatibility mode skips both producers and reads `--tidyi-input-root` plus
+`--reference-cv-root` (the latter defaults to the frozen legacy CV directory).
+Objective 6 continues to use copied
 rate tables with the same 13-column contract.
 
 ## 7. Known boundaries

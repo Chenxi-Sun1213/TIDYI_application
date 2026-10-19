@@ -27,3 +27,20 @@ not receive this additional entropy filter.
 The generated rate CSVs are written below
 `outputs/rate_generation/ty_df/`; this directory is generated output, not an
 authoritative input.
+
+## Reference CV generation
+
+The master also invokes `support/reference_cv_generation.py`. It uses the
+same saved QC sample tables to select Mukin 2m SPF and TMS 1m male reference
+samples. Reference rates come from `live-dead_annotation` in the original
+external matrices `thesis_project/mukin_qcdata/mukin_data.h5ad` and
+`thesis_project/tms_qcdata/tms_10x.h5ad`. Historical label merges and a 100-cell
+minimum apply per sample and cell type. The saved rate-group sets establish
+this cutoff; the historical notebook's current default of 10 differs.
+
+The tissuewise H5ADs listed above separately supply `tissue_wise_knn` cell
+counts for the historical matching rule. Their count labels are not substituted
+for the reference rate labels. The two CV tables are regenerated under
+`outputs/reference_cv/` using the TIDYI selected by the master, together with
+sample rates, exclusions, and a manifest. Frozen CV tables under
+`inputs/tidyi_statistics/` remain for explicit precomputed compatibility runs.

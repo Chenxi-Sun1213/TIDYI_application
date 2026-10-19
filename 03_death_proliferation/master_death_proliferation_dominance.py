@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Master entry point for Objective 3: death-proliferation dominance.
 
-By default, this master first rebuilds the five required TIDYI rate CSVs from
-the Mukin and TMS single-cell inputs, then reproduces the six confirmed
+By default, this master rebuilds the five required TIDYI rate CSVs and the
+sample-level reference CV tables from H5AD inputs, then generates the six
 regulation-magnitude-filter outputs. Scatter plots, effect-size plots,
 growth-noise filtering, and the older decomposition figures are out of scope.
 
@@ -72,6 +72,7 @@ from gene_mapping import GENE_MAPPING_FILE  # noqa: E402
 
 LEGACY_TIDYI_INPUT_ROOT = RA_ROOT / "inputs/tidyi_refine"
 RATE_PRODUCER = Path(__file__).parent / "support/tidyi_comparison_analysis.py"
+REFERENCE_CV_PRODUCER = Path(__file__).parent / "support/reference_cv_generation.py"
 RATE_GENERATION_INPUT_DIR = Path(__file__).parent / "rate_generation_inputs"
 MUKIN_STATS_PATH = RATE_GENERATION_INPUT_DIR / "mukin_sample_stas.csv"
 TMS_STATS_PATH = RATE_GENERATION_INPUT_DIR / "tms_sample_stas.csv"
@@ -81,6 +82,8 @@ DEFAULT_MUKIN_H5AD = Path(
 DEFAULT_TMS_H5AD = Path(
     "/scratch/chenxi.sun/thesis_project/tms_qcdata/tms_10x_tissuewise_knn.h5ad"
 )
+DEFAULT_MUKIN_REFERENCE_H5AD = DEFAULT_MUKIN_H5AD.with_name("mukin_data.h5ad")
+DEFAULT_TMS_REFERENCE_H5AD = DEFAULT_TMS_H5AD.with_name("tms_10x.h5ad")
 TYPICAL_CV_PATH = (
     RA_ROOT / "inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv"
 )
@@ -90,6 +93,7 @@ REFERENCE_CV_DETAIL_PATH = (
 )
 OUTPUT_DIR = Path(__file__).parent / "outputs"
 RATE_GENERATION_OUTPUT_DIR = OUTPUT_DIR / "rate_generation"
+REFERENCE_CV_OUTPUT_DIR = OUTPUT_DIR / "reference_cv"
 REGULATION_MAGNITUDE_THRESHOLD = 2 * np.log(2) / (24 * 3)
 
 RATE_FILENAMES = (
@@ -192,7 +196,8 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help=(
             "Skip single-cell rate generation and read the five rate CSVs from "
-            "--tidyi-input-root. Intended for compatibility checks only."
+            "--tidyi-input-root and reference CVs from --reference-cv-root. "
+            "Both rate and CV inference are skipped; use matching versions."
         ),
     )
     parser.add_argument(
@@ -222,7 +227,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tidyi-version-label", default="legacy-environment")
     parser.add_argument("--tidyi-model-label", default="legacy-model")
     parser.add_argument("--tidyi-formula-label", default="legacy-formula")
-    return parser.parse_args()
+    parser.add_argument(
+        "--mukin-reference-h5ad", type=Path, default=DEFAULT_MUKIN_REFERENCE_H5AD,
+        help="Original Mukin H5AD with historical live-dead_annotation for reference rates.",
+    )
+    parser.add_argument(
+        "--tms-reference-h5ad", type=Path, default=DEFAULT_TMS_REFERENCE_H5AD,
+        help="Original TMS H5AD with historical live-dead_annotation for reference rates.",
+    )
+    parser.add_argument(
+        "--reference-cv-root", type=Path, default=None,
+        help=(
+            "Precomputed reference CV directory, only with --use-precomputed-rates. "
+            "Defaults to the bundled legacy inputs/tidyi_statistics tables."
+        ),
+    )
+    args = parser.parse_args()
+    if args.reference_cv_root is not None and not args.use_precomputed_rates:
+        parser.error("--reference-cv-root requires --use-precomputed-rates")
+    return args
 
 
 def generate_rate_tables(
@@ -278,7 +301,7 @@ def generate_rate_tables(
 
 def load_rate_tables(input_root: Path) -> tuple[dict[str, pd.DataFrame], tuple[Path, ...]]:
     input_paths = tuple(input_root / filename for filename in RATE_FILENAMES)
-    require_paths((*input_paths, TYPICAL_CV_PATH, REFERENCE_CV_DETAIL_PATH))
+    require_paths(input_paths)
     tables: dict[str, pd.DataFrame] = {}
     for path in input_paths:
         table = pd.read_csv(path)
@@ -287,6 +310,42 @@ def load_rate_tables(input_root: Path) -> tuple[dict[str, pd.DataFrame], tuple[P
             raise KeyError(f"{path} is missing TIDYI columns: {sorted(missing)}")
         tables[path.stem.removesuffix("_tidyi")] = table
     return tables, input_paths
+
+
+def generate_reference_cv_tables(args: argparse.Namespace) -> tuple[Path, Path, list[dict[str, object]]]:
+    """Generate reference statistics using the same interpreter and TIDYI source."""
+    paths = tuple(
+        REFERENCE_CV_OUTPUT_DIR / name for name in (
+            "reference_sample_rates.csv",
+            REFERENCE_CV_DETAIL_PATH.name,
+            TYPICAL_CV_PATH.name,
+            "reference_cv_exclusions.csv",
+            "reference_cv_run_manifest.json",
+        )
+    )
+    require_paths((
+        REFERENCE_CV_PRODUCER, GENE_MAPPING_FILE, MUKIN_STATS_PATH, TMS_STATS_PATH,
+        args.mukin_reference_h5ad, args.tms_reference_h5ad, args.mukin_h5ad, args.tms_h5ad,
+    ))
+    configure_tidyi_source(args.tidyi_source_root)
+    before = snapshot_outputs(paths)
+    command = [
+        sys.executable, str(REFERENCE_CV_PRODUCER),
+        "--mukin-rate-h5ad", str(args.mukin_reference_h5ad),
+        "--tms-rate-h5ad", str(args.tms_reference_h5ad),
+        "--mukin-counts-h5ad", str(args.mukin_h5ad),
+        "--tms-counts-h5ad", str(args.tms_h5ad),
+        "--mukin-stats-csv", str(MUKIN_STATS_PATH),
+        "--tms-stats-csv", str(TMS_STATS_PATH),
+        "--output-dir", str(REFERENCE_CV_OUTPUT_DIR),
+        "--tidyi-version-label", args.tidyi_version_label,
+        "--tidyi-model-label", args.tidyi_model_label,
+        "--tidyi-formula-label", args.tidyi_formula_label,
+    ]
+    environment = os.environ.copy()
+    environment["MPLCONFIGDIR"] = str(OUTPUT_DIR / ".matplotlib")
+    subprocess.run(command, check=True, env=environment)
+    return paths[2], paths[1], validate_refreshed_outputs(paths, before)
 
 
 def group_table(
@@ -325,9 +384,11 @@ def build_paired_rates(tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return paired_rates
 
 
-def calculate_method3(paired_rates: pd.DataFrame) -> pd.DataFrame:
-    typical_cv_table = pd.read_csv(TYPICAL_CV_PATH)
-    reference_cv_detail = pd.read_csv(REFERENCE_CV_DETAIL_PATH)
+def calculate_method3(
+    paired_rates: pd.DataFrame, typical_cv_path: Path, reference_cv_detail_path: Path
+) -> pd.DataFrame:
+    typical_cv_table = pd.read_csv(typical_cv_path)
+    reference_cv_detail = pd.read_csv(reference_cv_detail_path)
     typical_cv = {
         (row["dataset"], row["rate"]): float(row["typical_cv"])
         for _, row in typical_cv_table.iterrows()
@@ -589,11 +650,23 @@ def main() -> None:
     started = datetime.now(timezone.utc)
 
     generated_rate_records: list[dict[str, object]] = []
+    generated_cv_records: list[dict[str, object]] = []
     single_cell_inputs: list[dict[str, object]] = []
     if args.use_precomputed_rates:
         input_root = args.tidyi_input_root.expanduser().resolve()
         rate_source_mode = "precomputed_compatibility"
+        cv_root = (
+            args.reference_cv_root.expanduser().resolve()
+            if args.reference_cv_root is not None else TYPICAL_CV_PATH.parent
+        )
+        typical_cv_path = cv_root / TYPICAL_CV_PATH.name
+        reference_cv_detail_path = cv_root / REFERENCE_CV_DETAIL_PATH.name
+        reference_cv_source_mode = "precomputed_compatibility"
     else:
+        require_paths((
+            args.mukin_reference_h5ad, args.tms_reference_h5ad,
+            args.mukin_h5ad, args.tms_h5ad, REFERENCE_CV_PRODUCER,
+        ))
         mukin_h5ad = args.mukin_h5ad.expanduser().resolve()
         tms_h5ad = args.tms_h5ad.expanduser().resolve()
         input_root, rate_paths, generated_rate_records = generate_rate_tables(
@@ -609,6 +682,10 @@ def main() -> None:
             file_record(GENE_MAPPING_FILE),
         ]
         rate_source_mode = "generated_from_single_cell"
+        typical_cv_path, reference_cv_detail_path, generated_cv_records = generate_reference_cv_tables(args)
+        reference_cv_source_mode = "generated_from_single_cell"
+
+    require_paths((typical_cv_path, reference_cv_detail_path))
 
     tables, rate_paths = load_rate_tables(input_root)
     pre_run_output_records = [
@@ -617,7 +694,7 @@ def main() -> None:
     before = snapshot_outputs(EXPECTED_OUTPUTS)
 
     paired_rates = build_paired_rates(tables)
-    method3 = calculate_method3(paired_rates)
+    method3 = calculate_method3(paired_rates, typical_cv_path, reference_cv_detail_path)
     for atlas in ("Mukin", "TMS"):
         save_magnitude_outputs(magnitude_table(method3, atlas), atlas)
 
@@ -628,6 +705,8 @@ def main() -> None:
         "started_utc": started.isoformat(),
         "finished_utc": datetime.now(timezone.utc).isoformat(),
         "rate_source_mode": rate_source_mode,
+        "reference_cv_source_mode": reference_cv_source_mode,
+        "generated_reference_cv_outputs": generated_cv_records,
         "tidyi_input_root": str(input_root),
         "tidyi_source_root": (
             str(args.tidyi_source_root.expanduser().resolve())
@@ -651,14 +730,16 @@ def main() -> None:
             "mukin_pca_dimensions": 30,
             "minimum_cells_per_comparison_group_tissue_celltype": 80,
             "raw_count_layer": "raw",
+            "numpy_random_seed": 0,
             "species": "mouse",
             "percentage_denominator": (
                 "cells within each pooled comparison-group and tissue before "
                 "the per-group minimum-cell filter"
             ),
         },
-        "typical_cv_input": file_record(TYPICAL_CV_PATH),
-        "reference_cv_input": file_record(REFERENCE_CV_DETAIL_PATH),
+        "typical_cv_input": file_record(typical_cv_path),
+        "reference_cv_input": file_record(reference_cv_detail_path),
+        "reference_cv_producer": file_record(REFERENCE_CV_PRODUCER),
         "legacy_rate_producer": (
             "/scratch/chenxi.sun/thesis_project/TIDYI/TIDYI_pattern/"
             "ty_pipeline_scripts/tidyi_comparison_analysis.py"

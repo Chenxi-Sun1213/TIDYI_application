@@ -12,7 +12,9 @@ source material and is not required as the output destination of these masters.
   `/srv/mfs/hausserlab/data/AER2025_Juliane/` and verified by SHA-256.
 - Mukin and TMS H5AD inputs remain in their existing `thesis_project` paths.
 - Objective 3 now regenerates its five rate CSVs from those H5ADs by default;
-  its bundled legacy CSVs are retained only for explicit compatibility runs.
+  it also regenerates reference CVs using the original Mukin/TMS H5AD annotations
+  and tissuewise cell counts. Bundled legacy rate/CV CSVs remain for explicit
+  compatibility runs.
 - Except for Objective 2, mouse gene-name mapping uses the shared frozen file
   `inputs/gene_mapping/mouse_symbol_to_ensembl.csv`; analysis code has no online
   mapping fallback. Its policy and source checksums are documented beside it.

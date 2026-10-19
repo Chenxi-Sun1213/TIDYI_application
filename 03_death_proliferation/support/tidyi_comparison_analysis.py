@@ -1366,6 +1366,8 @@ def run_tidyi_analysis(
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=ImplicitModificationWarning)
         warnings.filterwarnings("ignore", category=UserWarning, message="Received a view of an AnnData.*")
+        # Use the same reproducible training seed as reference_cv_generation.py.
+        np.random.seed(0)
         tidy_model = tidyi_main_mouse.tidy_rates_mouse(gene_list=adata.var_names.tolist())
         tidy_model.train_classifier()
 

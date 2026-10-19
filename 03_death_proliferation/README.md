@@ -4,8 +4,9 @@ This analysis estimates the relative contribution of changes in cell death to
 changes in proliferation and death across conditions in the Mukin and TMS
 datasets. The formal entry point is
 [master_death_proliferation_dominance.py](master_death_proliferation_dominance.py).
-By default, it generates five TIDYI rate tables from single-cell inputs, builds
-eight downstream contrasts, and exports Method 3 results after a
+By default, it generates five pooled TIDYI rate tables and new sample-level
+reference CV tables from H5AD inputs, builds eight downstream contrasts,
+and exports Method 3 results after a
 regulation-magnitude filter.
 
 This document describes the current implementation, reviewed on 2026-10-19.
@@ -15,36 +16,9 @@ owner in Section 2. Creating this document did not rerun the analysis.
 ## 1. Workflow
 
 The labels [A]–[F] connect the diagram to the source index in Section 8.
-The diagram uses Mermaid and can be viewed in a Markdown viewer with Mermaid
-support.
+The embedded SVG displays without a Mermaid extension. Open the image to zoom.
 
-```mermaid
-flowchart TD
-    A["Single-cell inputs [A]<br/>Mukin and TMS tissuewise H5ADs<br/>raw count layer; tissue_wise_knn labels"]
-    B["Sample metadata [B]<br/>mukin_sample_stas.csv<br/>tms_sample_stas.csv"]
-    A --> C
-    B --> C
-    C["Prepare samples and conditions [C]<br/>Keep listed samples; repair missing TMS ages<br/>Initialize analysis_celltype from tissue_wise_knn"]
-    C --> D["Prepare each rate comparison [C]<br/>Select tissues; pool cells by condition and tissue<br/>Calculate cell-type percentages before count filtering"]
-    D --> E["Mukin: constrained label transfer [C]<br/>Four state-like query labels<br/>30 PCA dimensions; 10 neighbors<br/>Keep query cells with entropy below 0.3<br/>and a whitelisted target label"]
-    D --> F["TMS [C]<br/>Use analysis_celltype directly"]
-    E --> G
-    F --> G
-    G["Filter small groups [C]<br/>At least 80 cells per<br/>condition group x tissue x cell type"]
-    M["Frozen gene mapping [D]<br/>Mouse symbols to Ensembl IDs"]
-    G --> H
-    M --> H
-    H["Infer TIDYI rates [C]<br/>Map genes; copy raw to counts<br/>Apply classifier per pooled group and cell type<br/>Estimate proliferation p and death d"]
-    H --> I["Intermediate output: 5 rate CSVs<br/>outputs/rate_generation/ty_df/<br/>3 Mukin tables; 2 TMS tables"]
-    I --> J["Build 8 downstream contrasts [E]<br/>Pair A and B on tissue and cell type<br/>Calculate changes in proliferation, death and growth"]
-    V["Reference statistics [D]<br/>Typical CV table and reference CV detail<br/>Mukin 2m SPF; TMS 1m male"]
-    V --> K["Calculate Method 3 weight k [E]<br/>One weight per dataset<br/>Death variability / proliferation variability"]
-    J --> L["Calculate Method 3 death fraction [E]<br/>F = abs(delta d) /<br/>(abs(delta d) + k * abs(delta p))"]
-    K --> L
-    L --> N["Apply regulation-magnitude filter [E]<br/>M = abs(delta p) + abs(delta d)<br/>Retain fractions where M is at least 0.019254 per hour<br/>Otherwise set the filtered fraction to missing"]
-    N --> O["Final outputs [F]<br/>2 result CSVs<br/>2 filtered heatmaps<br/>2 before/after histogram figures"]
-    O --> P["Run manifest [F]<br/>Input and output records; configuration; timestamps"]
-```
+![Objective 3 workflow: single-cell inputs, rate generation, Method 3, filtering, and outputs](docs/workflow.svg)
 
 ## 2. Data definitions
 
@@ -66,13 +40,19 @@ absolute paths. Large H5ADs remain at their existing external locations.
 
 | Input | Location | Role in the current code |
 |---|---|---|
-| Mukin single-cell matrix | [mukin_data_tissuewise_knn.h5ad](/scratch/chenxi.sun/thesis_project/mukin_qcdata/mukin_data_tissuewise_knn.h5ad) | Expression and cell metadata, including the base annotation |
-| TMS single-cell matrix | [tms_10x_tissuewise_knn.h5ad](/scratch/chenxi.sun/thesis_project/tms_qcdata/tms_10x_tissuewise_knn.h5ad) | Expression and cell metadata, including the base annotation |
+| Mukin tissuewise matrix | [mukin_data_tissuewise_knn.h5ad](../../thesis_project/mukin_qcdata/mukin_data_tissuewise_knn.h5ad) | Pooled rate inference and reference cell-count matching |
+| TMS tissuewise matrix | [tms_10x_tissuewise_knn.h5ad](../../thesis_project/tms_qcdata/tms_10x_tissuewise_knn.h5ad) | Pooled rate inference and reference cell-count matching |
+| Original Mukin matrix | [mukin_data.h5ad](../../thesis_project/mukin_qcdata/mukin_data.h5ad) | Sample-level reference rate inference using historical annotations |
+| Original TMS matrix | [tms_10x.h5ad](../../thesis_project/tms_qcdata/tms_10x.h5ad) | Sample-level reference rate inference using historical annotations |
 | Mukin sample table | [rate_generation_inputs/mukin_sample_stas.csv](rate_generation_inputs/mukin_sample_stas.csv) | Sample inclusion list; grouping uses the H5AD metadata |
 | TMS sample table | [rate_generation_inputs/tms_sample_stas.csv](rate_generation_inputs/tms_sample_stas.csv) | Sample inclusion list; supplies sample-to-mouse mapping when needed |
 | Frozen gene mapping | [mouse_symbol_to_ensembl.csv](../inputs/gene_mapping/mouse_symbol_to_ensembl.csv) | Offline mouse symbol-to-Ensembl conversion |
-| Typical CV values | [stats_notebook_aging_typical_cv_values.csv](../inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv) | Dataset-specific reference CVs and their source identifiers |
-| Reference CV detail | [stats_notebook_ref_cv_separate_by_dataset_celltype.csv](../inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv) | Reference mean rates used to calculate Method 3 weights |
+| Legacy typical CV values | [stats_notebook_aging_typical_cv_values.csv](../inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv) | Frozen reference CVs, used only in precomputed compatibility mode |
+| Legacy reference CV detail | [stats_notebook_ref_cv_separate_by_dataset_celltype.csv](../inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv) | Frozen reference means, used only in precomputed compatibility mode |
+
+Full runs generate the two CV filenames above under `outputs/reference_cv/`
+and use those generated tables for Method 3. They do not overwrite the frozen
+tables in `../inputs/tidyi_statistics/`.
 
 The sample tables were copied from
 `/scratch/chenxi.sun/thesis_project/TIDYI/TIDYI_pattern/`; see the
@@ -80,7 +60,7 @@ The sample tables were copied from
 
 Directory roles:
 
-- `support/`: rate-generation implementation called by the master.
+- `support/`: two producers called directly by the master: pooled rates and reference CVs.
 - `rate_generation_inputs/`: saved sample tables and their provenance notes.
 - `outputs/`: generated rates, final results, and run manifest; reruns overwrite
   the corresponding output paths.
@@ -142,9 +122,70 @@ See the [mapping policy](../inputs/gene_mapping/README.md) for conversion rules.
 Its older statement that Objective 3 normally consumes saved rates is outdated;
 the current master regenerates rates by default.
 
+### Sample-level reference calibration
+
+[reference_cv_generation.py](support/reference_cv_generation.py) is a separate
+producer called directly by the master. It does not call the pooled-rate
+producer or execute a historical notebook.
+
+1. Select Mukin 2m SPF and TMS 1m male samples from the saved QC sample tables.
+2. Read the original H5ADs, use `live-dead_annotation`, and apply the label
+   mappings from the historical sample-level `TIDYI_analysis.ipynb`.
+3. Keep sample–cell-type groups containing at least 100 cells. This cutoff
+   reconstructs the complete saved group sets: 68 Mukin and 455 TMS rate rows
+   across their original cohorts. The notebook currently contains a default
+   of 10; blindly copying that default would not reproduce those saved sets.
+4. Infer proliferation/death rates for each reference sample and cell type,
+   using `raw`, the frozen gene mapping, and the TIDYI implementation selected
+   by the master. Both producers reset the NumPy random seed to 0 before each
+   classifier training call. This explicit seed was added with the CV producer;
+   earlier pooled runs did not set it here.
+5. Independently count cells in the tissuewise H5ADs using the historical
+   `tissue_wise_knn` mapping and reference age/model/sex masks. Preserve the old
+   rule that excludes missing ages at this counting step; do not apply the
+   pooled producer's age-repair or comparison-specific relabeling here.
+6. Match count keys to reference rate keys, record unmatched groups, calculate
+   sample SD (`ddof=1`) / absolute mean for groups with at least two finite
+   observed rates and absolute mean above `1e-9`, then take the median valid CV
+   across cell types. Missing rates are not replaced by zero.
+
+This preserves the legacy grouping by reference dataset and cell type across
+the available tissues. `Sample/sample` is the replicate key, not automatically
+an independent animal. Tissue composition, annotation differences, and small
+replicate counts can therefore influence this variability estimate; it should
+not be described as pure technical noise. Reference and pooled annotations
+deliberately follow their respective historical workflows.
+
+The new producer writes sample rates, CV detail, typical CVs, exclusions, and a
+manifest to `outputs/reference_cv/`. The manifest records actual TIDYI module
+path/checksum, interpreter, version labels, input records, maps, seed, and
+statistical rules. The complete pipeline was run on 2026-10-19 using the active
+TIDYI 0.1.0 environment. The [validation report](outputs/reference_cv_validation.json)
+records the old-table replay, regenerated-rate/CV comparisons, file checksums,
+and final filtering checks. Legacy replay agrees to floating-point precision.
+Regenerated CVs and fractions have small numerical differences, while all
+final filter decisions are unchanged (24 retained Mukin entries and 21 TMS).
+Current formal outputs and the validation report are retained;
+`reference_outputs/` and the frozen CV inputs remain unchanged.
+
 ## 5. Five rate tables and eight downstream contrasts
 
 All five generated rate tables are written under `outputs/rate_generation/ty_df/`.
+
+These files are calculated from the H5ADs when the master calls
+`generate_rate_tables()`, which launches
+`support/tidyi_comparison_analysis.py` with `--output-dir outputs/rate_generation`.
+They are generated intermediate results, not copied reference inputs. The
+saved run manifest records `rate_source_mode: generated_from_single_cell`;
+the retained tables match its recorded checksums.
+
+The producer writes each result twice: once to `ty_df/` and once to
+`<comparison>/tidyi/`. The master reads only the five tables in `ty_df/`.
+The five byte-identical per-comparison copies were removed during cleanup;
+rerunning the current producer will recreate them. Keep `ty_df/` for downstream
+reruns and rate provenance. The final results, run manifest, full-run log, and
+`reference_outputs/` are retained separately.
+
 The identifiers below become filenames by appending `_tidyi.csv`.
 
 | Key | Rate-table identifier | Conditions estimated |
@@ -177,26 +218,36 @@ above rather than substituted from another comparison.
 
 ## 6. Method 3 and the regulation-magnitude filter
 
-Let `p` be proliferation rate and `d` death rate, both in h⁻¹:
+Let $p$ be proliferation rate and $d$ death rate, both in h⁻¹:
 
-```text
-delta_p      = p_A - p_B
-delta_d      = d_A - d_B
-delta_growth = delta_p - delta_d
+$$
+\begin{aligned}
+\Delta p &= p_A - p_B, \\
+\Delta d &= d_A - d_B, \\
+\Delta g &= \Delta p - \Delta d.
+\end{aligned}
+$$
 
-k = (CV_death,ref * mean_death,ref) /
-    (CV_prolif,ref * mean_prolif,ref)
+Here $\Delta g$ is `delta_growth` in the code.
 
-death_fraction_m3 = abs(delta_d) /
-                   (abs(delta_d) + k * abs(delta_p))
-```
+$$
+k = \frac{\mathrm{CV}_{d,\mathrm{ref}}\,\bar{d}_{\mathrm{ref}}}
+         {\mathrm{CV}_{p,\mathrm{ref}}\,\bar{p}_{\mathrm{ref}}}
+$$
 
-Each dataset has one `k`. The typical-CV table selects the reference sources:
+$$
+F_{\mathrm{death}}^{(3)}
+= \frac{|\Delta d|}{|\Delta d| + k\,|\Delta p|}
+$$
+
+$F_{\mathrm{death}}^{(3)}$ corresponds to `death_fraction_m3` in the code.
+
+Each dataset has one `k`. The generated typical-CV table selects the reference sources:
 Mukin 2m SPF and TMS 1m male. For each rate, the reference mean is the arithmetic
 mean of `mean_rate` over the corresponding reference-detail rows with
-`cv_status == 'computed'`. The current saved inputs give approximately
-`k = 1.963771` for Mukin and `k = 1.930233` for TMS; different reference inputs
-require recalculation.
+`cv_status == 'computed'`. The frozen legacy inputs give approximately
+`k = 1.963771` for Mukin and `k = 1.930233` for TMS. Full runs recompute both
+the CVs and reference means; those legacy weights are not assumed for a new run.
 
 Method 3 expresses relative changes after adjustment for reference variability.
 Values nearer 1 indicate a larger death contribution on this scale; values
@@ -205,12 +256,20 @@ percentage of net growth change. A zero denominator produces a missing fraction.
 
 The separate magnitude filter is:
 
-```text
-regulation_magnitude = abs(delta_p) + abs(delta_d)
-threshold            = 2 * ln(2) / (24 * 3)
-                     = 0.01925408835 h^-1
-passes_filter        = regulation_magnitude >= threshold
-```
+$$
+M = |\Delta p| + |\Delta d|
+$$
+
+$$
+\tau = \frac{2\ln(2)}{24\times 3}
+     \approx 0.01925408835\;\mathrm{h}^{-1}
+$$
+
+$$
+\text{Pass the filter if}\quad M \geq \tau.
+$$
+
+$M$ is `regulation_magnitude`; $\tau$ is `regulation_threshold` in the CSV.
 
 The same threshold applies to both datasets. The original fraction and the row
 are retained in the CSV; the filtered fraction is set to missing when the
@@ -232,15 +291,25 @@ For each prefix `mukin` and `tms`, the master writes these files under `outputs/
 | `{prefix}_method3_magnitude_filtered_heatmap.png` | Tissue–cell-type rows by four contrasts; retained fractions in color, filtered available fractions in white, unavailable fractions in gray |
 | `{prefix}_method3_magnitude_filter_histograms.png` | Before/after fraction distributions using 5-bin and 10-bin histograms |
 
+Full runs also create the following under `outputs/reference_cv/`:
+
+| Filename | Contents |
+|---|---|
+| `reference_sample_rates.csv` | New TIDYI rates and rate-cell counts per reference sample and cell type |
+| `stats_notebook_ref_cv_separate_by_dataset_celltype.csv` | Reference means, sample SDs, CVs, sample counts, and computation status |
+| `stats_notebook_aging_typical_cv_values.csv` | Four median-CV rows used by Method 3, with reference means and valid cell-type counts |
+| `reference_cv_exclusions.csv` | Groups below the reference cell-count cutoff and rates without matching tissuewise count keys |
+| `reference_cv_run_manifest.json` | Actual TIDYI module record, inputs, configuration, and generated-file records |
+
 The master also writes
 `outputs/master_death_proliferation_dominance_run_manifest.json`, recording run
 mode, timestamps, TIDYI labels/source-root argument, configuration, and file
 records. File records include checksums for files at or below 100 MB; the large
 H5AD records are not full checksum verification. Version/model/formula labels
 are supplied annotations, not automatic verification of the imported TIDYI code.
-The existing `outputs/master_death_proliferation_dominance_full_run.log` is
-historical execution evidence; the master does not automatically create that
-log filename on every run.
+The retained `outputs/master_death_proliferation_dominance_full_run.log`
+captures the latest complete run. The master does not automatically create
+that log filename on every invocation; it was captured by the execution wrapper.
 
 Read the [package handover guide](../RA_PROJECT_HANDOVER_GUIDE.md) first and use
 a Python environment containing TIDYI and the dependencies imported by the master
@@ -248,7 +317,7 @@ and producer. Run the master rather than invoking the support script directly.
 The following commands assume the current directory is `03_death_proliferation/`.
 
 ```bash
-# Full analysis: single cells -> five rate tables -> six final result files.
+# Full analysis: H5ADs -> pooled rates and reference CVs -> six final result files.
 python master_death_proliferation_dominance.py
 
 # Full analysis using a replacement checkout containing the tidyi package.
@@ -258,18 +327,27 @@ python master_death_proliferation_dominance.py \
   --tidyi-model-label MODEL_NAME \
   --tidyi-formula-label FORMULA_NAME
 
-# Downstream analysis only, using the five previously generated rate tables.
+# Downstream analysis only, using matching generated rates and reference CVs.
 python master_death_proliferation_dominance.py \
   --use-precomputed-rates \
-  --tidyi-input-root outputs/rate_generation/ty_df
+  --tidyi-input-root outputs/rate_generation/ty_df \
+  --reference-cv-root outputs/reference_cv
 ```
 
 The default precomputed fallback, when no `--tidyi-input-root` is provided, is
-`../inputs/tidyi_refine/`. Such a run does not regenerate or test the upstream
-TIDYI rates. Alternative H5AD paths can be supplied with `--mukin-h5ad` and
-`--tms-h5ad` in full-run mode.
+`../inputs/tidyi_refine/`. Without `--reference-cv-root`, compatibility mode
+uses the frozen legacy CVs in `../inputs/tidyi_statistics/`. It skips both
+producers; the operator must select matching rate/CV versions. It must not be
+used to combine new rates with old CVs unintentionally. `--reference-cv-root`
+is rejected outside compatibility mode; a normal full run always recomputes CVs.
 
-For handover review, confirm the five rate tables and six final result files,
+Alternative tissuewise H5ADs can be supplied with `--mukin-h5ad` and
+`--tms-h5ad`. Alternative original reference-rate H5ADs can be supplied with
+`--mukin-reference-h5ad` and `--tms-reference-h5ad`. Both pairs must represent
+the intended datasets and annotations. All four inputs remain outside the repository.
+
+For handover review, confirm the five pooled rate tables, five reference-CV
+output/provenance files, and six final result files,
 inspect the manifest's run mode and actual input paths, and review the figures
 and filtering behavior against `reference_outputs/`. Differences require
 checking input, annotation, gene-mapping, and TIDYI lineage. Successful output
@@ -279,23 +357,88 @@ decomposition figures are outside this master's declared final outputs.
 
 ## 8. Source index
 
-Current scripts establish implemented behavior. Historical notebooks and logs
-explain lineage; they are not additional steps to run before the master.
-Notebook cell numbers below are zero-based.
+### 8.1 Current runtime dependencies and reading order
+
+Start with the current master and the two local producers. The historical
+scripts and notebooks in Section 8.2 are provenance references; the master
+neither executes nor imports them.
+
+The full-run execution path is:
+
+```text
+master_death_proliferation_dominance.py
+  main()
+    generate_rate_tables()
+      launches support/tidyi_comparison_analysis.py in a subprocess
+        main() -> run_single_comparison() -> run_tidyi_analysis()
+          imports the TIDYI package and applies its classifier
+    generate_reference_cv_tables()
+      launches support/reference_cv_generation.py in a subprocess
+        infers sample rates -> matches tissuewise counts -> writes reference CV tables
+    load_rate_tables() -> build_paired_rates()
+    calculate_method3() -> magnitude_table() -> save_magnitude_outputs()
+    writes the run manifest
+```
+
+The master directly calls two sibling producer scripts; neither calls the other.
+Both use the same external TIDYI package. Method 3, magnitude filtering, and final plotting are
+implemented directly in the master. In `--use-precomputed-rates` mode, both
+producers and TIDYI inference are skipped.
+
+| Read in this order | Current file | Responsibility |
+|---|---|---|
+| 1 | [Master](master_death_proliferation_dominance.py) | Start at `main()`; inspect `CONTRASTS`, then pairing, Method 3, filtering, and plotting functions |
+| 2 | [Local rate producer](support/tidyi_comparison_analysis.py) | Start at `main()` and `run_single_comparison()` for sample preparation, label transfer, count filtering, and TIDYI inference |
+| 3 | [Reference CV producer](support/reference_cv_generation.py) | Sample-level reference rates, historical count matching, CV aggregation, and calibration provenance |
+| 4, when needed | [gene_mapping.py](../gene_mapping.py) | Shared offline gene conversion used by both producers |
+| 4, when needed | [handover_utils.py](../handover_utils.py) | Shared path checks, TIDYI source configuration, file records, and output checks used by this master; its notebook-execution helpers are not called by Objective 3 |
+
+`RATE_PRODUCER` points to `03_death_proliferation/support/`, not to the historical
+`thesis_project/.../ty_pipeline_scripts/` copy. TIDYI is imported from the active
+Python environment unless `--tidyi-source-root` explicitly selects a replacement.
+The `legacy_rate_producer` and `legacy_rate_log` entries written into the run
+manifest are provenance strings, not files loaded or executed by the master.
+
+The current inputs and implementation references are:
 
 | Diagram label | Source | What it establishes |
 |---|---|---|
 | [A], [B] | [Rate-generation input README](rate_generation_inputs/README.md) | Authoritative H5AD paths and original sample-table locations |
 | [C] | [Current rate producer](support/tidyi_comparison_analysis.py) | `COMPARISON_DEFINITIONS`, metadata preparation, relabeling, count filter, TIDYI calls, and exported rate columns |
-| [C] | [TIDYI_analysis_spl-merge.ipynb](/scratch/chenxi.sun/thesis_project/TIDYI/TIDYI_pattern/TIDYI_analysis_spl-merge.ipynb) | Historical notebook underlying rate generation |
-| [C] | [Historical producer](/scratch/chenxi.sun/thesis_project/TIDYI/TIDYI_pattern/ty_pipeline_scripts/tidyi_comparison_analysis.py) and [historical run log](/scratch/chenxi.sun/TIDYI_refine/logs/all_comparisons_refined.log) | Legacy implementation and execution evidence cited by the master |
+| [D] | [Current reference CV producer](support/reference_cv_generation.py) | Generates the reference CV and mean-rate tables from original and tissuewise H5ADs |
 | [D] | [Mapping module](../gene_mapping.py) and [mapping provenance](../inputs/gene_mapping/mapping_provenance.json) | Current offline conversion implementation and frozen mapping source |
-| [D] | [Typical CV table](../inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv) and [reference CV detail](../inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv) | Exact saved inputs used for Method 3 calibration |
-| [D] | [stats.ipynb](/scratch/chenxi.sun/TIDYI_statistics/stats.ipynb), cell 7 | Historical reference-CV calculation and export; the typical-CV table also records its summary-source path |
+| [D] | [Legacy typical CV table](../inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv) and [legacy reference CV detail](../inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv) | Frozen compatibility inputs; normal runs use new tables with these filenames in outputs/reference_cv/ |
 | [E] | [Current master](master_death_proliferation_dominance.py) | `CONTRASTS`, `build_paired_rates`, `calculate_method3`, `magnitude_table`, and `save_magnitude_outputs` |
-| [E] | [cell_death_test.ipynb](</scratch/chenxi.sun/RA project/death matter/cell_death_test.ipynb>), cells 6, 11, and 12 | Historical Method 3 formula and Mukin/TMS magnitude filters |
+
+Normal runs use the new support script to generate their CV CSVs; historical
+notebooks are never executed. The H5ADs outside the repository are actual data
+inputs; see Section 3. Their external location does not imply execution of old
+analysis scripts. The input README and mapping-provenance JSON document the
+inputs; the analysis reads the H5ADs/CSVs and mapping table themselves.
+
+### 8.2 Historical references only — not executed by the master
+
+Read these files to investigate how a method or saved input originated. They
+are not required reading for following the current execution path. Notebook
+cell numbers below are zero-based.
+
+| Diagram label | Source | What it establishes |
+|---|---|---|
+| [C] | [TIDYI_analysis_spl-merge.ipynb](../../thesis_project/TIDYI/TIDYI_pattern/TIDYI_analysis_spl-merge.ipynb) | TIDYI analysis based on pooled sample for mukin and tms to get more cell types past cell numbers threshold    |
+| [C] | [Historical producer](../../thesis_project/TIDYI/TIDYI_pattern/ty_pipeline_scripts/tidyi_comparison_analysis.py) and [historical run log](../../TIDYI_refine/logs/all_comparisons_refined.log) | Legacy implementation and execution evidence cited by the master |
+| [D] | [TIDYI_analysis.ipynb](../../thesis_project/TIDYI/TIDYI_pattern/TIDYI_analysis.ipynb), cells 13-15, 33, 36-41 | Original sample-rate annotations, rate inference, and sample metadata joins; its saved filter default does not reproduce the saved rate-group sets |
+| [D] | [ty_mukin_norm.csv](../../thesis_project/TIDYI/TIDYI_pattern/ty_mukin_norm.csv) and [tms_ty_df.csv](../../thesis_project/TIDYI/TIDYI_pattern/tms_ty_df.csv) | Historical sample-rate group sets used to establish the 100-cell cutoff; these saved rates are not inputs to the new CV producer |
+| [D] | [stats.ipynb](../../TIDYI_statistics/stats.ipynb), cell 7 | Historical reference-CV calculation and export; the typical-CV table also records its summary-source path |
+| [E] | [cell_death_test.ipynb](../../RA%20project/death%20matter/cell_death_test.ipynb), cells 6, 11, and 12 | Historical Method 3 formula and Mukin/TMS magnitude filters |
+
+### 8.3 Results and execution evidence — not analysis code
+
+| Diagram label | Source | What it establishes |
+|---|---|---|
 | [F] | [Generated outputs](outputs/) and [run manifest](outputs/master_death_proliferation_dominance_run_manifest.json) | Results and recorded provenance of the saved run; these paths require a completed run |
 | [F] | [Saved full-run log](outputs/master_death_proliferation_dominance_full_run.log) and [historical reference outputs](reference_outputs/) | Existing execution evidence and preserved comparison figures/tables |
 
-After the project owner completes Section 2, review those definitions together
-with the input provenance notes before treating the handover as complete.
+All links are relative to this README. Historical notebooks, the historical
+producer, and the historical log are outside this repository; their links
+require the existing sibling directories under `/scratch/chenxi.sun`.
+Generated-output links point to local run results, which are not versioned in Git.
