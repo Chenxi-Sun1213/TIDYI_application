@@ -10,47 +10,30 @@ and exports Method 3 results after a
 regulation-magnitude filter.
 
 This document describes the current implementation, reviewed on 2026-10-19.
-Dataset definitions and annotation background are reserved for the project
-owner in Section 2. Creating this document did not rerun the analysis.
+Creating this document did not rerun the analysis.
 
 ## 1. Workflow
 
-The labels [A]–[F] connect the diagram to the source index in Section 8.
+The labels [A]–[F] connect the diagram to the source index in Section 7.
 The embedded SVG displays without a Mermaid extension. Open the image to zoom.
 
 ![Objective 3 workflow: single-cell inputs, rate generation, Method 3, filtering, and outputs](docs/workflow.svg)
 
-## 2. Data definitions
-
-
-### 2.1 `tissue_wise_knn`
-
-**Processed h5ad data** : After QC, ASTRID reannotation, tissue wise knn dying cell label transfer
-### 2.2 `mukin_sample_stas.csv`
-
-**selected high quality samples after qc and batch effect filteration** 
-### 2.3 `tms_sample_stas.csv`
-
-**selected high quality samples after qc and batch effect filteration** 
-
-## 3. Inputs and directory roles
+## 2. Inputs and directory roles
 
 Paths in this document are relative to this directory unless written as
 absolute paths. Large H5ADs remain at their existing external locations.
 
-| Input | Location | Role in the current code |
+| Input | Location | Data description |
 |---|---|---|
-| Mukin tissuewise matrix | [mukin_data_tissuewise_knn.h5ad](../../thesis_project/mukin_qcdata/mukin_data_tissuewise_knn.h5ad) | Pooled rate inference and reference cell-count matching |
-| TMS tissuewise matrix | [tms_10x_tissuewise_knn.h5ad](../../thesis_project/tms_qcdata/tms_10x_tissuewise_knn.h5ad) | Pooled rate inference and reference cell-count matching |
-| Original Mukin matrix | [mukin_data.h5ad](../../thesis_project/mukin_qcdata/mukin_data.h5ad) | Sample-level reference rate inference using historical annotations |
-| Original TMS matrix | [tms_10x.h5ad](../../thesis_project/tms_qcdata/tms_10x.h5ad) | Sample-level reference rate inference using historical annotations |
-| Mukin sample table | [rate_generation_inputs/mukin_sample_stas.csv](rate_generation_inputs/mukin_sample_stas.csv) | Sample inclusion list; grouping uses the H5AD metadata |
-| TMS sample table | [rate_generation_inputs/tms_sample_stas.csv](rate_generation_inputs/tms_sample_stas.csv) | Sample inclusion list; supplies sample-to-mouse mapping when needed |
-| Frozen gene mapping | [mouse_symbol_to_ensembl.csv](../inputs/gene_mapping/mouse_symbol_to_ensembl.csv) | Offline mouse symbol-to-Ensembl conversion |
-| Legacy typical CV values | [stats_notebook_aging_typical_cv_values.csv](../inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv) | Frozen reference CVs, used only in precomputed compatibility mode |
-| Legacy reference CV detail | [stats_notebook_ref_cv_separate_by_dataset_celltype.csv](../inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv) | Frozen reference means, used only in precomputed compatibility mode |
+| Mukin and TMS tissuewise matrices | [Mukin H5AD](../../thesis_project/mukin_qcdata/mukin_data_tissuewise_knn.h5ad)<br>[TMS H5AD](../../thesis_project/tms_qcdata/tms_10x_tissuewise_knn.h5ad) | Processed h5ad data: After QC, ASTRID reannotation, tissue wise knn dying cell label transfer, used for sample pooled TIDYI inference |
+| Original Mukin and TMS matrices | [Mukin H5AD](../../thesis_project/mukin_qcdata/mukin_data.h5ad)<br>[TMS H5AD](../../thesis_project/tms_qcdata/tms_10x.h5ad) | original data without modification |
+| Mukin and TMS sample tables | [Mukin CSV](rate_generation_inputs/mukin_sample_stas.csv)<br>[TMS CSV](rate_generation_inputs/tms_sample_stas.csv) | samples passed QC and batch effect |
+| Frozen gene mapping | [Mapping CSV](../inputs/gene_mapping/mouse_symbol_to_ensembl.csv) | Offline mouse symbol-to-Ensembl conversion |
+| Legacy typical CV values | [Typical CV CSV](../inputs/tidyi_statistics/stats_notebook_aging_typical_cv_values.csv) | Frozen reference CVs, used only in precomputed compatibility mode |
+| Legacy reference CV detail | [Reference CV CSV](../inputs/tidyi_statistics/stats_notebook_ref_cv_separate_by_dataset_celltype.csv) | Frozen reference means, used only in precomputed compatibility mode |
 
-Full runs generate the two CV filenames above under `outputs/reference_cv/`
+Full runs generate the two CV tables above under `outputs/reference_cv/`
 and use those generated tables for Method 3. They do not overwrite the frozen
 tables in `../inputs/tidyi_statistics/`.
 
@@ -67,7 +50,7 @@ Directory roles:
 - `reference_outputs/`: historical comparison results, preserved separately
   from generated outputs. The master does not overwrite these files.
 
-## 4. Processing and analysis units
+## 3. Processing and analysis units
 
 ### Sample preparation and pooled rates
 
@@ -168,7 +151,7 @@ final filter decisions are unchanged (24 retained Mukin entries and 21 TMS).
 Current formal outputs and the validation report are retained;
 `reference_outputs/` and the frozen CV inputs remain unchanged.
 
-## 5. Five rate tables and eight downstream contrasts
+## 4. Five rate tables and eight downstream contrasts
 
 All five generated rate tables are written under `outputs/rate_generation/ty_df/`.
 
@@ -216,7 +199,7 @@ Thus, missing combinations are not treated as zero rates. Mukin relabeling is
 comparison-specific, so a condition's rate must be traced to the table selected
 above rather than substituted from another comparison.
 
-## 6. Method 3 and the regulation-magnitude filter
+## 5. Method 3 and the regulation-magnitude filter
 
 Let $p$ be proliferation rate and $d$ death rate, both in h⁻¹:
 
@@ -281,7 +264,7 @@ by Jean." Its formula equals twice the growth rate corresponding to a 3-day
 doubling time. That notebook does not document why three days or the factor of
 two were selected; no additional rationale is assumed here.
 
-## 7. Outputs and running the analysis
+## 6. Outputs and running the analysis
 
 For each prefix `mukin` and `tms`, the master writes these files under `outputs/`:
 
@@ -355,12 +338,12 @@ checks establish technical completion; scientific and visual acceptance remain
 manual. Historical scatter, effect-size, growth-noise-filter, and older
 decomposition figures are outside this master's declared final outputs.
 
-## 8. Source index
+## 7. Source index
 
-### 8.1 Current runtime dependencies and reading order
+### 7.1 Current runtime dependencies and reading order
 
 Start with the current master and the two local producers. The historical
-scripts and notebooks in Section 8.2 are provenance references; the master
+scripts and notebooks in Section 7.2 are provenance references; the master
 neither executes nor imports them.
 
 The full-run execution path is:
@@ -412,11 +395,11 @@ The current inputs and implementation references are:
 
 Normal runs use the new support script to generate their CV CSVs; historical
 notebooks are never executed. The H5ADs outside the repository are actual data
-inputs; see Section 3. Their external location does not imply execution of old
+inputs; see Section 2. Their external location does not imply execution of old
 analysis scripts. The input README and mapping-provenance JSON document the
 inputs; the analysis reads the H5ADs/CSVs and mapping table themselves.
 
-### 8.2 Historical references only — not executed by the master
+### 7.2 Historical references only — not executed by the master
 
 Read these files to investigate how a method or saved input originated. They
 are not required reading for following the current execution path. Notebook
@@ -431,7 +414,7 @@ cell numbers below are zero-based.
 | [D] | [stats.ipynb](../../TIDYI_statistics/stats.ipynb), cell 7 | Historical reference-CV calculation and export; the typical-CV table also records its summary-source path |
 | [E] | [cell_death_test.ipynb](../../RA%20project/death%20matter/cell_death_test.ipynb), cells 6, 11, and 12 | Historical Method 3 formula and Mukin/TMS magnitude filters |
 
-### 8.3 Results and execution evidence — not analysis code
+### 7.3 Results and execution evidence — not analysis code
 
 | Diagram label | Source | What it establishes |
 |---|---|---|
