@@ -31,7 +31,9 @@ External inputs and producers:
 
 Formal outputs are limited to local output sections 03, 05, the four AER-global-
 mean Method 3 files in 07, and pub_ready_fig. Upstream QC and annotation
-checkpoints are not regenerated.
+checkpoints and their output directories are not regenerated. Runtime provenance
+is retained alongside the outputs selected in reference_outputs/. Historical
+kNN and entropy audit tables are not required by this downstream master.
 """
 
 from __future__ import annotations
@@ -127,6 +129,16 @@ def main() -> None:
         ),
         4: (
             SourceReplacement(
+                "OUT = ensure_output_dirs(OUTPUT_ROOT)",
+                'OUT = {\n'
+                '    "biolucid": OUTPUT_ROOT / "03_biolucid",\n'
+                '    "tidyi": OUTPUT_ROOT / "05_tidyi",\n'
+                '    "growth_decomposition": OUTPUT_ROOT / "07_growth_rate_decomposition",\n'
+                '}\n'
+                'for output_dir in OUT.values():\n'
+                '    output_dir.mkdir(parents=True, exist_ok=True)',
+            ),
+            SourceReplacement(
                 'INPUT_H5AD = Path(\n    "/scratch/chenxi.sun/AER2025_Juliane/scanpy_analysis/outputs/"\n    "h5ad/aer_six_samples_raw_counts.h5ad"\n)',
                 f'INPUT_H5AD = Path({str(RAW_RECONSTRUCTION)!r})',
             ),
@@ -141,20 +153,35 @@ def main() -> None:
         ),
         19: (
             SourceReplacement(
+                'KNN_CHECKPOINT_DIR = OUT["restore"] / "per_sample_knn"\n'
+                'KNN_CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)',
+                '# This master only loads the retained post-entropy checkpoint.',
+            ),
+            SourceReplacement(
                 'POST_ENTROPY_H5AD = OUT["restore"] / "aer_post_entropy.h5ad"',
                 f'POST_ENTROPY_H5AD = Path({str(POST_ENTROPY_H5AD)!r})',
             ),
             SourceReplacement(
                 'transfer_summary = pd.read_csv(OUT["restore"] / "knn_transfer_summary.csv")',
-                'transfer_summary = pd.read_csv(PROJECT_ROOT / "inputs" / "knn_transfer_summary.csv")',
+                '',
             ),
             SourceReplacement(
                 'entropy_qc_by_sample = pd.read_csv(OUT["restore"] / "entropy_qc_by_sample.csv")',
-                'entropy_qc_by_sample = pd.read_csv(PROJECT_ROOT / "inputs" / "entropy_qc_by_sample.csv")',
+                '',
             ),
             SourceReplacement(
                 'entropy_qc_by_celltype = pd.read_csv(\n        OUT["restore"] / "entropy_qc_by_sample_celltype.csv"\n    )',
-                'entropy_qc_by_celltype = pd.read_csv(\n        PROJECT_ROOT / "inputs" / "entropy_qc_by_sample_celltype.csv"\n    )',
+                '',
+            ),
+            SourceReplacement(
+                'display(transfer_summary)\ndisplay(entropy_qc_by_sample)\ndisplay(entropy_qc_by_celltype)',
+                '',
+            ),
+        ),
+        21: (
+            SourceReplacement(
+                'post_filter_counts.to_csv(OUT["restore"] / "post_entropy_celltype_by_sample.csv")\n',
+                '',
             ),
         ),
         22: (SourceReplacement("RUN_BIOLUCID = False", "RUN_BIOLUCID = True"),),

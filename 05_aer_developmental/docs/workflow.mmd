@@ -1,0 +1,27 @@
+flowchart TD
+    A["Raw count matrix from 6 samples<br/>WT / Dac × E9.5 / E10.5 / E11.5"]
+    A --> B["DISTILL hard cell QC<br/>200 ≤ detected genes ≤ 8000<br/>500 ≤ UMIs ≤ 50000"]
+    B --> C{"Mitochondrial percentage"}
+    C -->|"≤ 12.5%"| D["Per-sample ASTRID<br/>Clustering and initial annotation"]
+    C -->|"> 12.5%"| E["Retain high-mitochondrial cells<br/>Await kNN annotation"]
+    D --> F["Manual cluster review<br/>Relabel by sample and cluster prefix"]
+    F --> G["Exclude Low quality, manually Unannotated,<br/>and ASTRID unassigned cells"]
+    G --> H["Reference cells<br/>Valid manual annotation<br/>Originally annotated by the authors"]
+    G --> I["Query cells<br/>Remaining author-unannotated cells"]
+    E --> I
+    H --> J["Per-sample kNN label transfer<br/>Depth normalization → log1p → PCA<br/>30 components; k = 10"]
+    I --> J
+    J --> K["Entropy filtering of query cells only<br/>Keep entropy < 0.3"]
+    H --> L["Final retained cells<br/>aer_post_entropy.h5ad"]
+    K --> L
+
+    L --> M["BioLUCID batch-effect diagnostics<br/>Global and per-sample results → manual review"]
+    M --> N["TIDYI gene preparation<br/>replay3 local cached mapping"]
+    N --> O["Train and apply mouse TIDYI<br/>Predict per-cell proliferation/death scores"]
+    O --> P["Sample × cell-type rates<br/>Report only groups with > 50 cells"]
+    P --> Q["Method 3: growth-rate change decomposition<br/>Developmental and Dac–WT contrasts<br/>Relative death and proliferation contributions"]
+    Q --> R["Contribution tables, heatmaps,<br/>and distributions"]
+    P --> S["Proliferation/death rate plots"]
+    L --> T["Cell-type composition per sample"]
+
+    style L fill:#dbeafe,stroke:#2563eb,stroke-width:3px
