@@ -18,5 +18,6 @@ versus young GF, old SPF versus old GF, and TMS male versus female in young and
 old animals. Each CSV contains 13 columns, including conditions, tissue, cell
 type, proliferation/death/growth rates, turnover, and cell percentage.
 
-The files in [tidyi_astrid_anno](../tidyi_astrid_anno/README.md) use a different
-annotation lineage and are not interchangeable with these tables.
+Objective 6 generates ASTRID-annotation-based rates under
+`06_systems_biology/outputs/input_preparation/ty_df/`. That annotation lineage
+is different and is not interchangeable with these tables.

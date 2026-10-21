@@ -35,10 +35,12 @@ Use `--tidyi-source-root` to select another TIDYI implementation for Objectives
 
 - Keep notebooks and helpers: they contain calculations used by the masters,
   including `01_rate_reproducibility/rates_reproduce_test.ipynb`.
-- Shared `inputs/` contains frozen mappings and two distinct legacy rate sets:
+- Shared `inputs/` contains frozen mappings and the legacy
   [author-annotation-based rates](inputs/tidyi_refine/README.md) for Objective 3
-  compatibility runs, and [ASTRID-annotation-based pooled rates](inputs/tidyi_astrid_anno/README.md)
-  for Objective 6. Mouse mapping uses the frozen replay3 cache; Objective 2
+  compatibility runs. Objective 6 generates ASTRID abundance and TIDYI rates with
+  [its input producer](06_systems_biology/prepare_systems_biology_inputs.py),
+  saving them under `06_systems_biology/outputs/input_preparation/` for fitting.
+  Mouse mapping uses the frozen replay3 cache; Objective 2
   retains its legacy mart mapping and gene filter.
 - Large inputs remain in `thesis_project` and `/srv/mfs/hausserlab/data/`.
   See [the handover guide](RA_PROJECT_HANDOVER_GUIDE.md) for paths and provenance.

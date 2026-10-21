@@ -61,16 +61,19 @@ grouped by fine `analysis_celltype`; the later cross-tissue aggregation is not
 used for Objective 3. Its reference CV producer separately infers sample-level
 rates from the original `mukin_data.h5ad` and `tms_10x.h5ad` annotations and uses
 the tissuewise H5ADs for cell-count matching. Both producers are called directly
-by the master; historical notebooks are not executed. Objective 6
-uses the same tissuewise H5ADs for tissuewise abundance and the ASTRID BM
-objects for mouse-level abundance.
+by the master; historical notebooks are not executed. Objective 6 starts from
+ASTRID-annotated H5ADs and generates mouse-level and condition-pooled abundance
+plus versioned TIDYI rates with `06_systems_biology/prepare_systems_biology_inputs.py`.
+Prepared inputs are saved under `06_systems_biology/outputs/input_preparation/`;
+the fitting master defaults to its `ty_df/` subdirectory.
 
 ### 3.3 Lightweight inputs copied into the handover
 
-`inputs/` contains two distinct five-table TIDYI rate sets:
+`inputs/` contains the five-table legacy
 [author-annotation-based rates](inputs/tidyi_refine/README.md) for Objective 3
-compatibility runs and [ASTRID-annotation-based pooled rates](inputs/tidyi_astrid_anno/README.md)
-for Objective 6. It also contains the shared offline gene mapping and the
+compatibility runs. Objective 6 generates its rates directly from ASTRID inputs
+instead of keeping historical rate CSVs in `inputs/`.
+The directory also contains the shared offline gene mapping and the
 Objective 2 classifier gene-name map. Reference CV tables are generated under
 `03_death_proliferation/outputs/reference_cv/`, rather than bundled in `inputs/`.
 Objective 3 also contains its historical rate producer, adapted to the shared
